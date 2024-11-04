@@ -9,7 +9,7 @@ hauteur = 700
 def nouvelle_partie():
     str_score.set("SCORE : 0")
     global alien
-    alien = Alien(canvas, x=50, y=50, size=30, speed=5)
+    alien = Alien(canvas, x=50, y=50, size=30, speed=10)
     mouvement_alien()
 
 # Fonction pour déplacer l'alien en continu
