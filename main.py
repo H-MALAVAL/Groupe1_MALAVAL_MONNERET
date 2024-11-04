@@ -1,4 +1,5 @@
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
+from classes.Aliens import Alien 
 
 # Définition des variables globales
 largeur = 1200
@@ -7,7 +8,14 @@ hauteur = 700
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
     str_score.set("SCORE : 0")
-    # il faut créer la logique ici
+    global alien
+    alien = Alien(canvas, x=50, y=50, size=30, speed=5)
+    mouvement_alien()
+
+# Fonction pour déplacer l'alien en continu
+def mouvement_alien():
+    alien.move()  # Déplacer l'alien
+    fenetre_principale.after(42, mouvement_alien)  # Appeler cette fonction toutes les 50 ms
 
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
