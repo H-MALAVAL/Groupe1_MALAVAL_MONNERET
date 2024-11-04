@@ -55,15 +55,16 @@ def envoyer_nouvelle_ligne():
 
 # Déplacer le vaisseau avec les touches fléchées
 def keyPress(event):
-    if event.keysym == 'Up':
-        joueur.deplacer(0, -10)
-    elif event.keysym == 'Down':
-        joueur.deplacer(0, 10)
-    elif event.keysym == 'Left':
-        joueur.deplacer(-10, 0)
-    elif event.keysym == 'Right':
-        joueur.deplacer(10, 0)
-
+    global PosY
+    touche = event.keysym
+    print(touche)
+    if touche == 'Left':
+        joueur.move(-10)
+        PosY -= 10
+    if touche == 'Right':
+        joueur.move(10)
+        PosY += 10
+    Canvas.coord(Pion, PosY - 10, PosY + 10)
         
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
@@ -136,4 +137,6 @@ menubar.add_cascade(label="Difficulté", menu=menu_difficulte)
 # Affichage du menu
 fenetre_principale.config(menu=menubar)
 # Lancement de la boucle principale de l'interface
+canvas.bind("<Left>", keyPress)
+canvas.bind("<Right>", keyPress)
 fenetre_principale.mainloop()
