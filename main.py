@@ -5,36 +5,49 @@ from classes.Aliens import Alien
 largeur = 1200
 hauteur = 700
 
+# Liste pour stocker les objets Alien
+aliens = []
+ligne_initiale_y = 50  # Position Y de la première ligne d'aliens
+espacement_y = 50      # Espacement vertical entre les lignes d'aliens
+
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
-    str_score.set("SCORE : 0")
-    global alien
-    creer_aliens_en_ligne(10)  # Créer 10 aliens en ligne
-    mouvement_alien()
-    
-
-# Liste pour stocker les aliens
-aliens = []
-
-# Fonction pour créer plusieurs aliens en ligne
-def creer_aliens_en_ligne(nombre_aliens, y_position=50, espacement=130):
     global aliens
-    aliens = []  # Réinitialise la liste des aliens
-    x_position = 50  # Position de départ en x
-    
+    aliens = []  # Réinitialiser la liste des aliens
+    str_score.set("SCORE : 0")
+    creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
+    mouvement_aliens()  # Démarrer le mouvement des aliens
+    envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
+
+# Fonction pour créer une ligne de plusieurs aliens
+def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
+    x_position = 50  # Position de départ en x pour les aliens
+    ligne_aliens = []  # Liste pour stocker une ligne d'aliens
+
     for i in range(nombre_aliens):
         # Créer un nouvel alien et le placer sur la ligne
         alien = Alien(canvas, x=x_position, y=y_position, size=30, speed=5)
-        aliens.append(alien)
-        
-        # Mettre à jour la position x pour le prochain alien en ajoutant l'espacement
-        x_position += espacement
+        ligne_aliens.append(alien)
 
-# Fonction pour déplacer l'alien en continu
-def mouvement_alien():
+        # Mettre à jour la position x pour le prochain alien en ajoutant l'espacement
+        x_position += espacement_x
+
+    # Ajouter la ligne d'aliens à la liste principale
+    aliens.extend(ligne_aliens)
+
+# Fonction pour déplacer tous les aliens
+def mouvement_aliens():
     for alien in aliens:
-        alien.move()  # Déplacer l'alien
-    fenetre_principale.after(42, mouvement_alien)  # Appeler cette fonction toutes les 50 ms
+        alien.move()  # Déplacer chaque alien
+    fenetre_principale.after(50, mouvement_aliens)  # Appeler cette fonction toutes les 50 ms
+
+# Fonction pour envoyer une nouvelle ligne d'aliens toutes les 10 secondes
+def envoyer_nouvelle_ligne():
+    # Calculer la position verticale de la nouvelle ligne en fonction du nombre de lignes déjà créées
+    y_position = ligne_initiale_y
+    creer_aliens_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
+    fenetre_principale.after(10000, envoyer_nouvelle_ligne)  # Appeler cette fonction toutes les 10 secondes
+
 
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
