@@ -9,46 +9,70 @@ largeur = 1200
 hauteur = 700
 
 # Liste pour stocker les objets Alien
-aliens = []
+aliens_blancs = []
+aliens_rouges = []
 ligne_initiale_y = 50  # Position Y de la première ligne d'aliens
 espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
-    global aliens
-    aliens = []  # Réinitialiser la liste des aliens
+    global aliens_blancs, aliens_rouges
+    aliens_blancs, aliens_rouges = [], []  # Réinitialiser les listes d'aliens
     str_score.set("SCORE : 0")
-    creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
-    mouvement_aliens()  # Démarrer le mouvement des aliens
-    envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
-    creer_alien_aleatoire()  # Créer un alien rouge aléatoire
-    tirer_missiles_aliens()  # Commencer à tirer des missiles depuis les aliens
+
+    creer_aliens_blancs_en_ligne(10)  # Créer une ligne d'aliens blancs
+    creer_alien_rouge()  # Créer un alien rouge aléatoire
+
+    mouvement_aliens_blancs()  # Démarrer le mouvement en ligne des aliens blancs
+    mouvement_aliens_rouges()  # Mouvement aléatoire des aliens rouges
+    tirs_aliens_rouges()  # Commencer les tirs des aliens rouges
     
     global joueur
     joueur = Joueur(canvas, x=650, y=600, score=0, vie = 3, size=30)
 
-# Fonction pour créer une ligne de plusieurs aliens
-def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
-    x_position = 50  # Position de départ en x pour les aliens
-    ligne_aliens = []  # Liste pour stocker une ligne d'aliens
+# Fonction pour créer une ligne d'aliens blancs
+def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
+    x_position = 50  # Position de départ en x pour les aliens blancs
+    ligne_aliens = []
 
-    for i in range(nombre_aliens):
-        # Créer un nouvel alien et le placer sur la ligne
-        alien = Alien(canvas, x=x_position, y=y_position, size=30, speed=5)
-        ligne_aliens.append(alien)
-
-        # Mettre à jour la position x pour le prochain alien en ajoutant l'espacement
+    for _ in range(nombre_aliens):
+        alien_blanc = Alien(canvas, x=x_position, y=y_position, size=30, speed=5, color="white")
+        ligne_aliens.append(alien_blanc)
         x_position += espacement_x
 
-    # Ajouter la ligne d'aliens à la liste principale
-    aliens.extend(ligne_aliens)
+    aliens_blancs.extend(ligne_aliens)
 
-# Fonction pour déplacer tous les aliens
-def mouvement_aliens():
-    for alien in aliens:
-        alien.move()  # Déplacer l'alien
-    fenetre_principale.after(42, mouvement_aliens)  # Appeler cette fonction toutes les 50 ms
+# Fonction pour créer plusieurs aliens rouges à des positions aléatoires
+def creer_aliens_rouges(nombre_rouges=5):
+    for _ in range(nombre_rouges):
+        x_position = random.randint(50, largeur - 50)  # Position X aléatoire
+        alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=5, color="red")
+        aliens_rouges.append(alien_rouge)
 
+# Fonction pour déplacer les aliens blancs en ligne
+def mouvement_aliens_blancs():
+    for alien in aliens_blancs:
+        alien.move()  # Déplacer l'alien blanc
+    fenetre_principale.after(42, mouvement_aliens_blancs)  # Rappel toutes les 42 ms
+
+# Fonction pour déplacer les aliens rouges de manière aléatoire
+def mouvement_aliens_rouges():
+    for alien_rouge in aliens_rouges:
+        dx = random.choice([-10, 10])
+        dy = random.choice([-5, 5])
+        alien_rouge.move_random(dx, dy)  # Déplacement aléatoire de l'alien rouge
+    fenetre_principale.after(500, mouvement_aliens_rouges)  # Rappel toutes les 500 ms
+
+# Fonction pour gérer les tirs aléatoires des aliens rouges
+def tirs_aliens_rouges():
+    for alien_rouge in aliens_rouges:
+        if random.random() < 0.1:  # 10% de chance de tirer à chaque appel
+            x, y = alien_rouge.get_position()[0], alien_rouge.get_position()[1] + alien_rouge.size
+            missile = Missile(canvas, x=x, y=y, direction="down")  # Créer le missile dirigé vers le bas
+            missile.move()
+    fenetre_principale.after(500, tirs_aliens_rouges)  # Rappel toutes les 500 ms
+
+"""
 # Fonction pour envoyer une nouvelle ligne d'aliens toutes les 10 secondes
 def envoyer_nouvelle_ligne():
     # Calculer la position verticale de la nouvelle ligne en fonction du nombre de lignes déjà créées
@@ -69,7 +93,7 @@ def tirer_missiles_aliens():
             missile = Missile(canvas, x=alien.get_position()[0], y=alien.get_position()[1] + alien.size)
             missile.move()  # Lance le mouvement du missile
     fenetre_principale.after(300, tirer_missiles_aliens)  # Rappel toutes les 300 ms
-
+"""
 
 # Déplacer le vaisseau avec les touches fléchées
 def keyPress(event):
