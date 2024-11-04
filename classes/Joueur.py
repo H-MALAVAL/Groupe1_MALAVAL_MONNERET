@@ -1,22 +1,26 @@
-# MALAVAL Hugo, MONNERET Martin le 4/11/2024
-
-import tkinter as tk
-from PIL import Image,ImageTk 
+# MALAVAL Hugo, MONNERET Martin le 4/11/2024 
+from tkinter import Canvas
 # Création de la class joueur
-class joueur:
+class Joueur:
     # Composée de l'apparence du joueur, du score du joueur et de ses points de vie
-    def __init__(self, canvas, x, y, score, vie):
-        self.score = []
-        self.vie = []
+    def __init__(self, canvas, x, y, score, vie, size = 30):
+
+        self.score = score
+        self.vie = vie
+        self.canvas = canvas
         
-        image = Image.open("vaisseau.png")
-        self.image_tk = ImageTk.PhotoImage(image)
+        """image = Image.open("vaisseau.gif")
+
+        self.image_tk = ImageTk.PhotoImage(image)  # Convertir en format compatible Tkinter"""
         
-        # Ajouter l'image au canevas à la position (x, y)
-        self.sprite = canvas.create_image(x, y, anchor="center", image=self.image_tk)
+        self.vaisseau_id = canvas.create_rectangle(x, y, x + size, y + size, fill="white")
         
-        self.image_tk = ImageTk.PhotoImage(image)  # Convertir en format compatible Tkinter
-        self.image_id = canvas.create_image(self.x, self.y, image=self.image_tk)  # Ajouter l'image au canevas
+        
+    def move(self):
+        
+        self.x += dx
+        self.y += dy
+        canvas.move(self.image_id, dx, dy)
     
     def score(self):
         """Arguments: aucun

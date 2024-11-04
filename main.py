@@ -1,5 +1,6 @@
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
-from classes.Aliens import Alien 
+from classes.Aliens import Alien
+from classes.Joueur import Joueur
 
 # Définition des variables globales
 largeur = 1200
@@ -8,14 +9,28 @@ hauteur = 700
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
     str_score.set("SCORE : 0")
+    global joueur
     global alien
     alien = Alien(canvas, x=50, y=50, size=30, speed=5)
     mouvement_alien()
+    joueur = Joueur(canvas, x=50, y=50, score=0, vie = 3, size=30)
 
 # Fonction pour déplacer l'alien en continu
 def mouvement_alien():
     alien.move()  # Déplacer l'alien
     fenetre_principale.after(42, mouvement_alien)  # Appeler cette fonction toutes les 50 ms
+    
+# Déplacer le vaisseau avec les touches fléchées
+def keyPress(event):
+    if event.keysym == 'Up':
+        joueur.deplacer(0, -10)
+    elif event.keysym == 'Down':
+        joueur.deplacer(0, 10)
+    elif event.keysym == 'Left':
+        joueur.deplacer(-10, 0)
+    elif event.keysym == 'Right':
+        joueur.deplacer(10, 0)
+
 
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
@@ -48,7 +63,7 @@ fenetre_principale.minsize(largeur + 150, hauteur + 50)
 fenetre_principale.title("Space Invaders")
 
 # Création d'un canevas pour dessiner les éléments du jeu
-canvas = Canvas(fenetre_principale, width=largeur, height=hauteur, bg="black")
+canvas = Canvas(fenetre_principale, width=largeur, height=hauteur, bg="green")
 canvas.pack(pady=20)
 
 # Création d'une zone de texte pour afficher le score actuel
@@ -87,6 +102,5 @@ menubar.add_cascade(label="Difficulté", menu=menu_difficulte)
 
 # Affichage du menu
 fenetre_principale.config(menu=menubar)
-
 # Lancement de la boucle principale de l'interface
 fenetre_principale.mainloop()
