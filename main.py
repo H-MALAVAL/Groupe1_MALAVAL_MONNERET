@@ -16,13 +16,9 @@ def nouvelle_partie():
     global aliens
     aliens = []  # Réinitialiser la liste des aliens
     str_score.set("SCORE : 0")
-    global alien
-    creer_aliens_en_ligne(10)  # Créer 10 aliens en ligne
-    mouvement_alien()
-    
-
-# Liste pour stocker les aliens
-aliens = []
+    creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
+    mouvement_aliens()  # Démarrer le mouvement des aliens
+    envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
 
 # Fonction pour créer une ligne de plusieurs aliens
 def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -44,7 +40,14 @@ def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
 def mouvement_aliens():
     for alien in aliens:
         alien.move()  # Déplacer l'alien
-    fenetre_principale.after(42, mouvement_alien)  # Appeler cette fonction toutes les 50 ms
+    fenetre_principale.after(42, mouvement_aliens)  # Appeler cette fonction toutes les 50 ms
+
+# Fonction pour envoyer une nouvelle ligne d'aliens toutes les 10 secondes
+def envoyer_nouvelle_ligne():
+    # Calculer la position verticale de la nouvelle ligne en fonction du nombre de lignes déjà créées
+    y_position = ligne_initiale_y
+    creer_aliens_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
+    fenetre_principale.after(10000, envoyer_nouvelle_ligne)  # Appeler cette fonction toutes les 10 secondes
 
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
@@ -77,7 +80,7 @@ fenetre_principale.minsize(largeur + 150, hauteur + 50)
 fenetre_principale.title("Space Invaders")
 
 # Création d'un canevas pour dessiner les éléments du jeu
-canvas = Canvas(fenetre_principale, width=largeur, height=hauteur, bg="green")
+canvas = Canvas(fenetre_principale, width=largeur, height=hauteur, bg="black")
 canvas.pack(pady=20)
 
 # Création d'une zone de texte pour afficher le score actuel
