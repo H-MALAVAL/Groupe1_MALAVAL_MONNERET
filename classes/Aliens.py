@@ -5,7 +5,7 @@
 from tkinter import Canvas
 
 class Alien:
-    def __init__(self, canvas, x, y, size=30, speed=5, descent_step=50):
+    def __init__(self, canvas, x, y, size=30, speed=5, descent_step=50, color="white"):
         """
         Initialise l'alien avec ses paramètres de position, de taille et de vitesse.
         """
@@ -14,9 +14,10 @@ class Alien:
         self.speed = speed
         self.direction = 1  # 1 pour aller à droite, -1 pour aller à gauche
         self.descent_step = descent_step  # Nombre de pixels que l'alien descend après un aller-retour
+        self.color = color  # Couleur de l'alien
         
-        # Création de l'alien comme un rectangle (ou un autre objet de votre choix)
-        self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill="white")
+        # Création de l'alien avec la couleur spécifiée
+        self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
 
     def move(self):
         """
@@ -38,3 +39,5 @@ class Alien:
         Renvoie la position actuelle de l'alien.
         """
         return self.canvas.coords(self.alien_id)
+    
+

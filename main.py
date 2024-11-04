@@ -1,6 +1,8 @@
+import random
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
 from classes.Aliens import Alien
 from classes.Joueur import Joueur
+from classes.Missiles import Missile
 
 # Définition des variables globales
 largeur = 1200
@@ -19,6 +21,8 @@ def nouvelle_partie():
     creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
     mouvement_aliens()  # Démarrer le mouvement des aliens
     envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
+    creer_alien_aleatoire()  # Créer un alien rouge aléatoire
+    tirer_missiles_aliens()  # Commencer à tirer des missiles depuis les aliens
     
     global joueur
     joueur = Joueur(canvas, x=650, y=600, score=0, vie = 3, size=30)
@@ -52,6 +56,20 @@ def envoyer_nouvelle_ligne():
     creer_aliens_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
     fenetre_principale.after(10000, envoyer_nouvelle_ligne)  # Appeler cette fonction toutes les 10 secondes
 
+# Création des aliens rouges aléatoirement au-dessus du vaisseau
+def creer_alien_aleatoire():
+    x_position = random.randint(50, largeur - 50)  # Position X aléatoire entre les bords
+    alien = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=5, color="red")
+    aliens.append(alien)
+
+# Fonction pour tirer des missiles depuis les aliens
+def tirer_missiles_aliens():
+    for alien in aliens:
+        if random.random() < 0.7:  # Probabilité de tirer (70% de chance par cycle)
+            missile = Missile(canvas, x=alien.get_position()[0], y=alien.get_position()[1] + alien.size)
+            missile.move()  # Lance le mouvement du missile
+    fenetre_principale.after(300, tirer_missiles_aliens)  # Rappel toutes les 300 ms
+
 
 # Déplacer le vaisseau avec les touches fléchées
 def keyPress(event):
@@ -64,7 +82,7 @@ def keyPress(event):
     elif event.keysym == 'Right':
         joueur.deplacer(10, 0)
 
-        
+
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
     messagebox.showinfo("Règles du jeu", "Les règles du jeu Space Invaders sont simples :\n"
