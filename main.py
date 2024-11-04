@@ -19,6 +19,9 @@ def nouvelle_partie():
     creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
     mouvement_aliens()  # Démarrer le mouvement des aliens
     envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
+    
+    global joueur
+    joueur = Joueur(canvas, x=650, y=600, score=0, vie = 3, size=30)
 
 # Fonction pour créer une ligne de plusieurs aliens
 def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -49,6 +52,19 @@ def envoyer_nouvelle_ligne():
     creer_aliens_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
     fenetre_principale.after(10000, envoyer_nouvelle_ligne)  # Appeler cette fonction toutes les 10 secondes
 
+
+# Déplacer le vaisseau avec les touches fléchées
+def keyPress(event):
+    if event.keysym == 'Up':
+        joueur.deplacer(0, -10)
+    elif event.keysym == 'Down':
+        joueur.deplacer(0, 10)
+    elif event.keysym == 'Left':
+        joueur.deplacer(-10, 0)
+    elif event.keysym == 'Right':
+        joueur.deplacer(10, 0)
+
+        
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
     messagebox.showinfo("Règles du jeu", "Les règles du jeu Space Invaders sont simples :\n"
