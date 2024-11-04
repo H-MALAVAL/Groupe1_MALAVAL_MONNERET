@@ -11,13 +11,33 @@ def nouvelle_partie():
     str_score.set("SCORE : 0")
     global joueur
     global alien
-    alien = Alien(canvas, x=50, y=50, size=30, speed=5)
+    creer_aliens_en_ligne(10)  # Créer 10 aliens en ligne
     mouvement_alien()
-    joueur = Joueur(canvas, x=50, y=50, score=0, vie = 3, size=30)
+    
+    joueur = Joueur(canvas, x=650, y=600, score=0, vie = 3, size=30)
+
+
+# Liste pour stocker les aliens
+aliens = []
+
+# Fonction pour créer plusieurs aliens en ligne
+def creer_aliens_en_ligne(nombre_aliens, y_position=50, espacement=130):
+    global aliens
+    aliens = []  # Réinitialise la liste des aliens
+    x_position = 50  # Position de départ en x
+    
+    for i in range(nombre_aliens):
+        # Créer un nouvel alien et le placer sur la ligne
+        alien = Alien(canvas, x=x_position, y=y_position, size=30, speed=5)
+        aliens.append(alien)
+        
+        # Mettre à jour la position x pour le prochain alien en ajoutant l'espacement
+        x_position += espacement
 
 # Fonction pour déplacer l'alien en continu
 def mouvement_alien():
-    alien.move()  # Déplacer l'alien
+    for alien in aliens:
+        alien.move()  # Déplacer l'alien
     fenetre_principale.after(42, mouvement_alien)  # Appeler cette fonction toutes les 50 ms
     
 # Déplacer le vaisseau avec les touches fléchées
