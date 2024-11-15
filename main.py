@@ -1,3 +1,7 @@
+# MALAVAL Hugo, MONNERET Martin le 15/11/2024
+
+# Création du fichier main
+
 import random
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
 from classes.Aliens import Alien
@@ -32,16 +36,19 @@ def nouvelle_partie():
     creer_aliens_blancs_en_ligne(10)  # Créer une ligne d'aliens blancs
     creer_alien_rouge(5)  # Créer des aliens rouge aléatoire
 
-    mouvement_aliens_rouges()  # Déplacement vers les cibles
-    mettre_a_jour_cibles_rouges()
-
-    envoyer_nouvelle_ligne()
-
-    # Réinitialiser le joueur
-    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
     mouvement_aliens_blancs()
     mouvement_aliens_rouges()
     tirs_aliens_rouges()
+    mettre_a_jour_cibles_rouges()
+
+    envoyer_nouvelle_ligne()
+    
+
+    # Réinitialiser le joueur
+    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
+    
+    verifier_collisions()
+    
 
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -97,6 +104,71 @@ def tirs_aliens_rouges():
             missile.move()
     fenetre_principale.after(500, tirs_aliens_rouges)
 
+# Fonction pour vérifier les collisions
+def verifier_collisions():
+    # Collisions des missiles du joueur
+    for missile in missiles_joueur[:]:
+        missile_coords = canvas.coords(missile.missile_id)
+        items = canvas.find_overlapping(*missile_coords)
+
+        for item in items:
+            if item == missile.missile_id:
+                continue
+
+            # Collision avec un alien blanc
+            for alien in aliens_blancs[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_blancs.remove(alien)
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                    break
+
+            # Collision avec un alien rouge
+            for alien in aliens_rouges[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_rouges.remove(alien)
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                    break
+
+    # Collisions des missiles aliens
+    for missile in missiles_aliens[:]:
+        missile_coords = canvas.coords(missile.missile_id)
+        items = canvas.find_overlapping(*missile_coords)
+
+        for item in items:
+            if item == missile.missile_id:
+                continue
+
+            # Collision avec le joueur
+            if joueur.id == item:
+                joueur.perdre_vie()
+                missile.delete()
+                missiles_aliens.remove(missile)
+                break
+
+            # Collision avec un autre alien blanc
+            for alien in aliens_blancs[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_blancs.remove(alien)
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+                    break
+
+            # Collision avec un autre alien rouge
+            for alien in aliens_rouges[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_rouges.remove(alien)
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+                    break
+
+    # Répéter la vérification périodiquement
+    fenetre_principale.after(50, verifier_collisions)
 
 # Déplacer le vaisseau avec les touches fléchées
 def keyPress(event):

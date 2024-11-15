@@ -2,7 +2,6 @@
 
 # Création de la class missiles
 from tkinter import Canvas
-
 class Missile:
     def __init__(self, canvas, x, y, size=5, speed=10, direction="up"):
         self.canvas = canvas
