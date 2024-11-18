@@ -10,14 +10,18 @@ class Missile:
         self.missile_id = canvas.create_rectangle(x, y, x + size, y + size * 2, fill="red")
 
     def move(self):
-        self.canvas.move(self.missile_id, 0, -self.speed)
-        if self.is_out_of_bounds():
-            self.delete()
-        else:
-            self.canvas.after(50, self.move)
+        if self.canvas.coords(self.missile_id):  # Vérifiez que le missile existe encore
+            self.canvas.move(self.missile_id, 0, -self.speed)
+            if self.is_out_of_bounds():
+                self.delete()
+            else:
+                self.canvas.after(50, self.move)
 
     def is_out_of_bounds(self):
-        _, y1, _, y2 = self.canvas.coords(self.missile_id)
+        coords = self.canvas.coords(self.missile_id)
+        if len(coords) != 4:  # Si les coordonnées ne sont pas valides
+            return True
+        _, y1, _, y2 = coords
         return y2 < 0 or y1 > self.canvas.winfo_height()
 
     def delete(self):
