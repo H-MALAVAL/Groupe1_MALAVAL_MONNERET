@@ -274,7 +274,7 @@ score_label.place(x=0,y=0)
 
 # Création d'une zone de texte pour afficher le nombre de vies actuel
 str_vies = StringVar()
-str_vies.set("VIES : 3")
+str_vies.set("Vie restante : 3")
 vies_label = Label(fenetre_principale, textvariable=str_vies, fg="darkblue", font=("Arial", 14))
 vies_label.place(x=0,y=27)
 
