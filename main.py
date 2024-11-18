@@ -266,13 +266,13 @@ canvas.pack(pady=20)
 str_score = StringVar()
 str_score.set("SCORE : 0")
 score_label = Label(fenetre_principale, textvariable=str_score, fg="darkblue", font=("Arial", 14))
-score_label.pack(side='left', padx=10)
+score_label.place(x=50,y=50)
 
 # Création d'une zone de texte pour afficher le nombre de vies actuel
 str_vies = StringVar()
 str_vies.set("VIES : 3")
 vies_label = Label(fenetre_principale, textvariable=str_vies, fg="darkblue", font=("Arial", 14))
-vies_label.pack(side='left', padx=10)
+vies_label.place(x=50,y=50)
 
 # Création d'un widget Button pour démarrer une nouvelle partie
 bouton_go = Button(fenetre_principale, text="New Game", fg='white', bg="purple", command=nouvelle_partie)
