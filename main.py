@@ -140,16 +140,21 @@ def verifier_collisions():
     # Collisions des missiles aliens
     for missile in missiles_aliens[:]:
         missile_coords = canvas.coords(missile.missile_id)
-        items = canvas.find_overlapping(*missile_coords)
+        if len(missile_coords) == 4:  # Vérifiez que nous avons une boîte englobante valide
+            x1, y1, x2, y2 = missile_coords
+            items = canvas.find_overlapping(x1, y1, x2, y2)
+        else:
+            print( "Les cordonnées ne sont pas correctes")
+            continue
 
         for item in items:
             if item == missile.missile_id:
                 continue
 
             # Collision avec le joueur
-            if joueur.id == item:
+            if joueur.vaisseau_id == item:
                 print(f"Collision avec Joueur")
-                joueur.perdre_vie()
+                #joueur.perdre_vie()
                 missile.delete()
                 missiles_aliens.remove(missile)
                 break
