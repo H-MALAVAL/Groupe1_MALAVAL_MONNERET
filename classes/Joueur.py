@@ -4,7 +4,7 @@ from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messag
 # Création de la class joueur
 class Joueur:
     # Composée de l'apparence du joueur, du score du joueur et de ses points de vie
-    def __init__(self, canvas, x, y, score, vie, size = 30):
+    def __init__(self, canvas, x, score, vie, size = 30):
 
         self.score = score
         self.vie = vie
