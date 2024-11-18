@@ -25,7 +25,7 @@ espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 def nouvelle_partie():
     global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
     # Réinitialiser les objets
-    Clavier(event.keysym)
+    canvas.bind_all('<KeyPress>', Clavier)
     for alien in aliens_blancs + aliens_rouges:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
@@ -48,18 +48,24 @@ def nouvelle_partie():
     # Réinitialiser le joueur
     joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
     
+    PosX = joueur.x
+    
     verifier_collisions()
 
 # Fonction pour déplacer le vaisseau avec les touches
 def Clavier(event):
     global PosX
+    print('JE suis la')# Met à jour la position sur le canvas
     touche = event.keysym
-    if touche == 'Left':
-        joueur.deplacer(-10, 0)
-    elif touche == 'Right':
-        joueur.deplacer(10, 0)
+    if touche == 'a':
+        joueur.deplacer(-1)
+    elif touche == 'z':
+        joueur.deplacer(1)
             
-    canvas.coords(Joueur,PosX-10,PosX+10) 
+    canvas.coords(joueur,PosX-1,PosX+1)
+    
+    # Mettre à jour la position sur le canvas
+    canvas.coords(Joueur.id, PosX - 10, 600, PosX + 10, 630)  # Ajuste les dimensions 
     
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -155,9 +161,9 @@ def verifier_collisions():
 
             # Collision avec le joueur
             if joueur.id == item:
-                joueur.perdre_vie()
+                """joueur.perdre_vie()
                 missile.delete()
-                missiles_aliens.remove(missile)
+                missiles_aliens.remove(missile)"""
                 break
 
             # Collision avec un autre alien blanc

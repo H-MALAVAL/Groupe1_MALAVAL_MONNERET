@@ -9,6 +9,8 @@ class Joueur:
         self.score = score
         self.vie = vie
         self.canvas = canvas
+        self.size = size
+        self.x = x
         
         """image = Image.open("vaisseau.gif")
 
@@ -26,13 +28,17 @@ class Joueur:
             x_center + width_bottom // 2, y_center + height // 2, # Point en bas à droite
             x_center - width_bottom // 2, y_center + height // 2  # Point en bas à gauche
         ]
-        self.vaisseau_id = canvas.create_polygon(points, fill="violet", outline="black", width=2)
+        self.id = canvas.create_polygon(points, fill="violet", outline="black", width=2)
                 
-    def move(self):
+    def deplacer(self,dx):
         
         self.x += dx
-        self.y += dy
-        canvas.move(self.image_id, dx, dy)
+        # Met à jour la position sur le canvas
+        self.canvas.coords(
+            self.id, 
+            self.x - self.size // 2,
+            self.x + self.size // 2,
+        )
     
     def score(self):
         """Arguments: aucun
@@ -44,5 +50,4 @@ class Joueur:
     def vie(self):
          vies = 3
     
-    # Déplacer le vaisseau avec les touches fléchées
 
