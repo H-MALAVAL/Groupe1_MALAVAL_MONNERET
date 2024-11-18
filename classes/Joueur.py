@@ -1,6 +1,5 @@
 # MALAVAL Hugo, MONNERET Martin le 4/11/2024 
-from tkinter import Canvas
-from PIL import Image, ImageTk
+from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
 
 # Création de la class joueur
 class Joueur:
@@ -29,7 +28,6 @@ class Joueur:
         ]
         self.vaisseau_id = canvas.create_polygon(points, fill="violet", outline="black", width=2)
                 
-        
     def move(self):
         
         self.x += dx
@@ -42,7 +40,16 @@ class Joueur:
         (10 points pour alien de base, 25 pour alien qui tire et 150 pour le boss final)
         Renvoi le score actualisé à chaque fois qu'il change et l'affiche sur la fenêtre principale"""
         score = 0
-        
     
     def vie(self):
          vies = 3
+    
+    # Déplacer le vaisseau avec les touches fléchées
+    def Clavier(event):
+        
+        global PosX
+        touche = event.keysym
+        if touche == 'Left':
+            joueur.deplacer(-10, 0)
+        elif touche == 'Right':
+            joueur.deplacer(10, 0)

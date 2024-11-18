@@ -170,18 +170,6 @@ def verifier_collisions():
     # Répéter la vérification périodiquement
     fenetre_principale.after(50, verifier_collisions)
 
-# Déplacer le vaisseau avec les touches fléchées
-def keyPress(event):
-    if event.keysym == 'Up':
-        joueur.deplacer(0, -10)
-    elif event.keysym == 'Down':
-        joueur.deplacer(0, 10)
-    elif event.keysym == 'Left':
-        joueur.deplacer(-10, 0)
-    elif event.keysym == 'Right':
-        joueur.deplacer(10, 0)
-
-
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
     messagebox.showinfo("Règles du jeu", "Les règles du jeu Space Invaders sont simples :\n"
