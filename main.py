@@ -59,16 +59,12 @@ def Clavier(event):
     if touche == 'a':
         joueur.deplacer(-10)
     elif touche == 'z':
-<<<<<<< HEAD
         joueur.deplacer(10)
     elif touche == 'space':
         tirs_joueurs()
              
     # Met à jour la position du joueur sur le canevas
     canvas.coords(joueur.id, joueur.x - 10, 600, joueur.x + 10, 630)
-=======
-        joueur.deplacer(1) 
->>>>>>> c53228e2965e001beda9948d6dd120d925546138
     
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
