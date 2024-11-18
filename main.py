@@ -26,9 +26,6 @@ def nouvelle_partie():
     global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
-=======
-    #Clavier(event.keysym)
->>>>>>> a331d072a3d22ea782588229d8a3f741928a5104
     for alien in aliens_blancs + aliens_rouges:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
@@ -173,10 +170,10 @@ def verifier_collisions():
         missile_coords = canvas.coords(missile.missile_id)
         if len(missile_coords) != 4:
             continue
-        m_x1, m_y1, m_x2, m_y2 = missile_coords
+        m_x1, m_y1, m_x2, m_y2 = missile_coords 
 
         # Collision avec le joueur
-        joueur_coords = canvas.coords(joueur.vaisseau_id)
+        joueur_coords = canvas.coords(joueur.id)
         if len(joueur_coords) == 4:
             j_x1, j_y1, j_x2, j_y2 = joueur_coords
             if m_x2 > j_x1 and m_x1 < j_x2 and m_y2 > j_y1 and m_y1 < j_y2:
@@ -187,13 +184,7 @@ def verifier_collisions():
                     missiles_aliens.remove(missile)
                 continue
 
-<<<<<<< HEAD
-            # Collision avec le joueur
-            if joueur.id == item:
-                """joueur.perdre_vie()
-                missile.delete()
-                missiles_aliens.remove(missile)"""
-=======
+
         # Vérification des collisions avec les aliens blancs
         for alien in aliens_blancs[:]:
             alien_coords = canvas.coords(alien.alien_id)
@@ -209,7 +200,6 @@ def verifier_collisions():
                 if missile in missiles_aliens:
                     missile.delete()
                     missiles_aliens.remove(missile)
->>>>>>> a331d072a3d22ea782588229d8a3f741928a5104
                 break
 
         # Vérification des collisions avec les aliens rouges
