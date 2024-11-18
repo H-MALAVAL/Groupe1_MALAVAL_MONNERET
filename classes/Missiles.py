@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # MALAVAL Hugo, MONNERET Martin le 15/11/2024
 
 # Création de la class missiles
@@ -24,4 +22,3 @@ class Missile:
 
     def delete(self):
         self.canvas.delete(self.missile_id)
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151

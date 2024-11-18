@@ -1,42 +1,28 @@
-<<<<<<< HEAD
-=======
 # MALAVAL Hugo, MONNERET Martin le 15/11/2024
 
 # Création du fichier main
 
 import random
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
 from classes.Aliens import Alien
 from classes.Joueur import Joueur
+from classes.Missiles import Missile
 
 # Définition des variables globales
 largeur = 1200
 hauteur = 700
 
 # Liste pour stocker les objets Alien
-<<<<<<< HEAD
-aliens = []
-=======
 aliens_blancs = []
 aliens_rouges = []
 missiles_aliens = []
 missiles_joueur = []
 
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 ligne_initiale_y = 50  # Position Y de la première ligne d'aliens
 espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
-<<<<<<< HEAD
-    global aliens
-    aliens = []  # Réinitialiser la liste des aliens
-    str_score.set("SCORE : 0")
-    creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
-    mouvement_aliens()  # Démarrer le mouvement des aliens
-    envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
-=======
     global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
     # Réinitialiser les objets
     for alien in aliens_blancs + aliens_rouges:
@@ -62,22 +48,8 @@ def nouvelle_partie():
     joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
     
     verifier_collisions()
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
     
 
-<<<<<<< HEAD
-# Fonction pour créer une ligne de plusieurs aliens
-def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
-    x_position = 50  # Position de départ en x pour les aliens
-    ligne_aliens = []  # Liste pour stocker une ligne d'aliens
-
-    for i in range(nombre_aliens):
-        # Créer un nouvel alien et le placer sur la ligne
-        alien = Alien(canvas, x=x_position, y=y_position, size=30, speed=5)
-        ligne_aliens.append(alien)
-
-        # Mettre à jour la position x pour le prochain alien en ajoutant l'espacement
-=======
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
     x_position = 50  # Position de départ en x pour les aliens blancs
@@ -85,20 +57,10 @@ def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=7
     for _ in range(nombre_aliens):
         alien_blanc = Alien(canvas, x=x_position, y=y_position, size=30, speed=5, color="white")
         ligne_aliens.append(alien_blanc)
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
         x_position += espacement_x
 
-    # Ajouter la ligne d'aliens à la liste principale
-    aliens.extend(ligne_aliens)
+    aliens_blancs.extend(ligne_aliens)
 
-<<<<<<< HEAD
-# Fonction pour déplacer tous les aliens
-def mouvement_aliens():
-    for alien in aliens:
-        alien.move()  # Déplacer l'alien
-    fenetre_principale.after(42, mouvement_aliens)  # Appeler cette fonction toutes les 50 ms
-
-=======
 # Fonction pour créer un alien rouge aléatoire
 def creer_alien_rouge(nombre):
     for _ in range(nombre):
@@ -112,7 +74,6 @@ def mouvement_aliens_blancs():
         alien.move()  # Déplacer l'alien blanc
     fenetre_principale.after(42, mouvement_aliens_blancs)  # Rappel toutes les 42 ms
 
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 # Fonction pour envoyer une nouvelle ligne d'aliens toutes les 10 secondes
 def envoyer_nouvelle_ligne():
     # Calculer la position verticale de la nouvelle ligne en fonction du nombre de lignes déjà créées
@@ -120,8 +81,6 @@ def envoyer_nouvelle_ligne():
     creer_aliens_blancs_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
     fenetre_principale.after(10000, envoyer_nouvelle_ligne)  # Appeler cette fonction toutes les 10 secondes
 
-<<<<<<< HEAD
-=======
 # Cibles pour les aliens rouges
 def mettre_a_jour_cibles_rouges():
     for alien_rouge in aliens_rouges:
@@ -210,21 +169,19 @@ def verifier_collisions():
 
     # Répéter la vérification périodiquement
     fenetre_principale.after(50, verifier_collisions)
->>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 
 # Déplacer le vaisseau avec les touches fléchées
 def keyPress(event):
-    global PosY
-    touche = event.keysym
-    print(touche)
-    if touche == 'Left':
-        joueur.move(-10)
-        PosY -= 10
-    if touche == 'Right':
-        joueur.move(10)
-        PosY += 10
-    Canvas.coord(Pion, PosY - 10, PosY + 10)
-        
+    if event.keysym == 'Up':
+        joueur.deplacer(0, -10)
+    elif event.keysym == 'Down':
+        joueur.deplacer(0, 10)
+    elif event.keysym == 'Left':
+        joueur.deplacer(-10, 0)
+    elif event.keysym == 'Right':
+        joueur.deplacer(10, 0)
+
+
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
     messagebox.showinfo("Règles du jeu", "Les règles du jeu Space Invaders sont simples :\n"
@@ -296,6 +253,4 @@ menubar.add_cascade(label="Difficulté", menu=menu_difficulte)
 # Affichage du menu
 fenetre_principale.config(menu=menubar)
 # Lancement de la boucle principale de l'interface
-canvas.bind("<Left>", keyPress)
-canvas.bind("<Right>", keyPress)
 fenetre_principale.mainloop()
