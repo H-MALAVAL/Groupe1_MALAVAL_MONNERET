@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+=======
+# MALAVAL Hugo, MONNERET Martin le 15/11/2024
+
+# Création du fichier main
+
+import random
+>>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
 from classes.Aliens import Alien
 from classes.Joueur import Joueur
@@ -7,22 +15,57 @@ largeur = 1200
 hauteur = 700
 
 # Liste pour stocker les objets Alien
+<<<<<<< HEAD
 aliens = []
+=======
+aliens_blancs = []
+aliens_rouges = []
+missiles_aliens = []
+missiles_joueur = []
+
+>>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 ligne_initiale_y = 50  # Position Y de la première ligne d'aliens
 espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
+<<<<<<< HEAD
     global aliens
     aliens = []  # Réinitialiser la liste des aliens
     str_score.set("SCORE : 0")
     creer_aliens_en_ligne(10)  # Créer la première ligne d'aliens
     mouvement_aliens()  # Démarrer le mouvement des aliens
     envoyer_nouvelle_ligne()  # Commencer à envoyer des lignes toutes les 10 secondes
-    
-    global joueur
-    joueur = Joueur(canvas, x=650, y=600, score=0, vie = 3, size=30)
+=======
+    global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
+    # Réinitialiser les objets
+    for alien in aliens_blancs + aliens_rouges:
+        alien.delete()
+    for missile in missiles_aliens + missiles_joueur:
+        missile.delete()
+    aliens_blancs, aliens_rouges = [], []
+    missiles_aliens, missiles_joueur = [], []
 
+    str_score.set("SCORE : 0")
+    creer_aliens_blancs_en_ligne(10)  # Créer une ligne d'aliens blancs
+    creer_alien_rouge(5)  # Créer des aliens rouge aléatoire
+
+    mouvement_aliens_blancs()
+    mouvement_aliens_rouges()
+    tirs_aliens_rouges()
+    mettre_a_jour_cibles_rouges()
+
+    envoyer_nouvelle_ligne()
+    
+
+    # Réinitialiser le joueur
+    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
+    
+    verifier_collisions()
+>>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
+    
+
+<<<<<<< HEAD
 # Fonction pour créer une ligne de plusieurs aliens
 def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
     x_position = 50  # Position de départ en x pour les aliens
@@ -34,24 +77,140 @@ def creer_aliens_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
         ligne_aliens.append(alien)
 
         # Mettre à jour la position x pour le prochain alien en ajoutant l'espacement
+=======
+# Fonction pour créer une ligne d'aliens blancs
+def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
+    x_position = 50  # Position de départ en x pour les aliens blancs
+    ligne_aliens = []
+    for _ in range(nombre_aliens):
+        alien_blanc = Alien(canvas, x=x_position, y=y_position, size=30, speed=5, color="white")
+        ligne_aliens.append(alien_blanc)
+>>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
         x_position += espacement_x
 
     # Ajouter la ligne d'aliens à la liste principale
     aliens.extend(ligne_aliens)
 
+<<<<<<< HEAD
 # Fonction pour déplacer tous les aliens
 def mouvement_aliens():
     for alien in aliens:
         alien.move()  # Déplacer l'alien
     fenetre_principale.after(42, mouvement_aliens)  # Appeler cette fonction toutes les 50 ms
 
+=======
+# Fonction pour créer un alien rouge aléatoire
+def creer_alien_rouge(nombre):
+    for _ in range(nombre):
+        x_position = random.randint(50, largeur - 50)
+        alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=5, color="red")
+        aliens_rouges.append(alien_rouge)
+
+# Fonction pour déplacer les aliens blancs en ligne
+def mouvement_aliens_blancs():
+    for alien in aliens_blancs:
+        alien.move()  # Déplacer l'alien blanc
+    fenetre_principale.after(42, mouvement_aliens_blancs)  # Rappel toutes les 42 ms
+
+>>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 # Fonction pour envoyer une nouvelle ligne d'aliens toutes les 10 secondes
 def envoyer_nouvelle_ligne():
     # Calculer la position verticale de la nouvelle ligne en fonction du nombre de lignes déjà créées
     y_position = ligne_initiale_y
-    creer_aliens_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
+    creer_aliens_blancs_en_ligne(10, y_position)  # Créer une nouvelle ligne d'aliens à cette position
     fenetre_principale.after(10000, envoyer_nouvelle_ligne)  # Appeler cette fonction toutes les 10 secondes
 
+<<<<<<< HEAD
+=======
+# Cibles pour les aliens rouges
+def mettre_a_jour_cibles_rouges():
+    for alien_rouge in aliens_rouges:
+        alien_rouge.set_new_target()
+    fenetre_principale.after(5000, mettre_a_jour_cibles_rouges)  # Rappel toutes les 7 secondes
+
+# Fonction pour déplacer les aliens rouges
+def mouvement_aliens_rouges():
+    for alien_rouge in aliens_rouges:
+        alien_rouge.move_towards_target()
+    fenetre_principale.after(42, mouvement_aliens_rouges)  # Rappel toutes les 42 ms
+
+
+# Gestion des tirs des aliens rouges
+def tirs_aliens_rouges():
+    for alien_rouge in aliens_rouges:
+        if random.random() < 0.5:  # 50% de chance de tirer
+            x, y = alien_rouge.get_position()
+            missile = Missile(canvas, x=x, y=y + alien_rouge.size, direction="down")
+            missiles_aliens.append(missile)
+            missile.move()
+    fenetre_principale.after(500, tirs_aliens_rouges)
+
+# Fonction pour vérifier les collisions
+def verifier_collisions():
+    # Collisions des missiles du joueur
+    for missile in missiles_joueur[:]:
+        missile_coords = canvas.coords(missile.missile_id)
+        items = canvas.find_overlapping(*missile_coords)
+
+        for item in items:
+            if item == missile.missile_id:
+                continue
+
+            # Collision avec un alien blanc
+            for alien in aliens_blancs[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_blancs.remove(alien)
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                    break
+
+            # Collision avec un alien rouge
+            for alien in aliens_rouges[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_rouges.remove(alien)
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                    break
+
+    # Collisions des missiles aliens
+    for missile in missiles_aliens[:]:
+        missile_coords = canvas.coords(missile.missile_id)
+        items = canvas.find_overlapping(*missile_coords)
+
+        for item in items:
+            if item == missile.missile_id:
+                continue
+
+            # Collision avec le joueur
+            if joueur.id == item:
+                joueur.perdre_vie()
+                missile.delete()
+                missiles_aliens.remove(missile)
+                break
+
+            # Collision avec un autre alien blanc
+            for alien in aliens_blancs[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_blancs.remove(alien)
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+                    break
+
+            # Collision avec un autre alien rouge
+            for alien in aliens_rouges[:]:
+                if alien.alien_id == item:
+                    alien.delete()
+                    aliens_rouges.remove(alien)
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+                    break
+
+    # Répéter la vérification périodiquement
+    fenetre_principale.after(50, verifier_collisions)
+>>>>>>> 63089a2df22482122df7d80703a3ed5f8c122151
 
 # Déplacer le vaisseau avec les touches fléchées
 def keyPress(event):
