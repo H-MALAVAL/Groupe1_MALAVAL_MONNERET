@@ -7,10 +7,14 @@ from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messag
 from classes.Aliens import Alien
 from classes.Joueur import Joueur
 from classes.Missiles import Missile
+from classes.Murs import Murs
 
 # Définition des variables globales
 largeur = 1200
 hauteur = 700
+
+#Liste pour stocker les Murs
+liste_murs = []
 
 # Liste pour stocker les objets Alien
 aliens_blancs = []
@@ -23,7 +27,7 @@ espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
-    global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
+    global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, murs, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
     for alien in aliens_blancs + aliens_rouges:
@@ -32,11 +36,13 @@ def nouvelle_partie():
         missile.delete()
     aliens_blancs, aliens_rouges = [], []
     missiles_aliens, missiles_joueur = [], []
+    liste_murs = []
 
     str_score.set("SCORE : 0")
+    creer_murs(4)
     creer_aliens_blancs_en_ligne(0)  # Créer une ligne d'aliens blancs
     creer_alien_rouge(5)  # Créer des aliens rouge aléatoire
-
+    
     mouvement_aliens_blancs()
     mouvement_aliens_rouges()
     tirs_aliens_rouges()
@@ -61,7 +67,7 @@ def Clavier(event):
         joueur.deplacer(10)
     elif touche == 'space':
         tirs_joueurs()
-             
+
     # Met à jour la position du joueur sur le canevas
     canvas.coords(joueur.id, joueur.x - 10, 600, joueur.x + 10, 630)
     
@@ -82,6 +88,14 @@ def creer_alien_rouge(nombre):
         x_position = random.randint(50, largeur - 50)
         alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=5, color="red")
         aliens_rouges.append(alien_rouge)
+        
+def creer_murs(nombre):
+    x_position = 50
+    for _ in range(nombre):
+        y_position = 500
+        mur = Murs(canvas, x=x_position, y=y_position, size=30, color="white")
+        liste_murs.append(mur)
+        x_position += 330
 
 # Fonction pour déplacer les aliens blancs en ligne
 def mouvement_aliens_blancs():
@@ -174,6 +188,21 @@ def verifier_collisions():
                     missile.delete()
                     missiles_joueur.remove(missile)
                 break
+            
+        for murs in liste_murs[:]:
+            murs_coords = canvas.coords(murs.murs_id)
+            if len(murs_coords) != 4:
+                continue
+            a_x1, a_y1, a_x2, a_y2 = murs_coords
+            
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                if missile in missiles_joueur:
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                break
+            
 
     # Collisions des missiles aliens
     for missile in missiles_aliens[:]:
@@ -195,7 +224,7 @@ def verifier_collisions():
                 continue
 
 
-        # Vérification des collisions avec les aliens blancs
+        """# Vérification des collisions avec les aliens blancs
         for alien in aliens_blancs[:]:
             alien_coords = canvas.coords(alien.alien_id)
             if len(alien_coords) != 4:
@@ -210,7 +239,7 @@ def verifier_collisions():
                 if missile in missiles_aliens:
                     missile.delete()
                     missiles_aliens.remove(missile)
-                break
+                break"""
 
         # Vérification des collisions avec les aliens rouges
         for alien in aliens_rouges[:]:
@@ -224,6 +253,20 @@ def verifier_collisions():
                 # Collision détectée
                 alien.delete()
                 aliens_rouges.remove(alien)
+                if missile in missiles_aliens:
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+                break
+            
+        for murs in liste_murs[:]:
+            murs_coords = canvas.coords(murs.murs_id)
+            if len(murs_coords) != 4:
+                continue
+            a_x1, a_y1, a_x2, a_y2 = murs_coords
+            
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
                 if missile in missiles_aliens:
                     missile.delete()
                     missiles_aliens.remove(missile)

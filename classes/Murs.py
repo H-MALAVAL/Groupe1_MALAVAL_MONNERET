@@ -7,7 +7,7 @@ import random
 
 class Murs:
     
-    def __init__(self, canvas, x, y, size=30, color="red"):
+    def __init__(self, canvas, x, y, size=300, color="white"):
         """
         Initialise les murs avec leurs paramètres de position et de taille.
         """
@@ -21,4 +21,4 @@ class Murs:
         self.target_y = y
         
         # Création des murs avec la couleur spécifiée
-        self.murs_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
+        self.murs_id = canvas.create_rectangle(x, y, x + 100, y + 50, fill=self.color)
