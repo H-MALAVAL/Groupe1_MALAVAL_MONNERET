@@ -59,12 +59,16 @@ def Clavier(event):
     if touche == 'a':
         joueur.deplacer(-10)
     elif touche == 'z':
+<<<<<<< HEAD
         joueur.deplacer(10)
     elif touche == 'space':
         tirs_joueurs()
              
     # Met à jour la position du joueur sur le canevas
     canvas.coords(joueur.id, joueur.x - 10, 600, joueur.x + 10, 630)
+=======
+        joueur.deplacer(1) 
+>>>>>>> c53228e2965e001beda9948d6dd120d925546138
     
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -267,6 +271,12 @@ str_score = StringVar()
 str_score.set("SCORE : 0")
 score_label = Label(fenetre_principale, textvariable=str_score, fg="darkblue", font=("Arial", 14))
 score_label.pack(side='left', padx=10)
+
+# Création d'une zone de texte pour afficher le nombre de vies actuel
+str_vies = StringVar()
+str_vies.set("VIES : 3")
+vies_label = Label(fenetre_principale, textvariable=str_vies, fg="darkblue", font=("Arial", 14))
+vies_label.pack(side='left', padx=10)
 
 # Création d'un widget Button pour démarrer une nouvelle partie
 bouton_go = Button(fenetre_principale, text="New Game", fg='white', bg="purple", command=nouvelle_partie)
