@@ -48,7 +48,7 @@ def nouvelle_partie():
     joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
     
     verifier_collisions()
-    
+
 
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -109,8 +109,12 @@ def verifier_collisions():
     # Collisions des missiles du joueur
     for missile in missiles_joueur[:]:
         missile_coords = canvas.coords(missile.missile_id)
-        items = canvas.find_overlapping(*missile_coords)
-
+        if len(missile_coords) == 4:  # Vérifiez que nous avons une boîte englobante valide
+            x1, y1, x2, y2 = missile_coords
+            items = canvas.find_overlapping(x1, y1, x2, y2)
+        else:
+            print( "Les ccordonnées ne sont pas correctes")
+            continue
         for item in items:
             if item == missile.missile_id:
                 continue
@@ -144,6 +148,7 @@ def verifier_collisions():
 
             # Collision avec le joueur
             if joueur.id == item:
+                print(f"Collision avec Joueur")
                 joueur.perdre_vie()
                 missile.delete()
                 missiles_aliens.remove(missile)
@@ -152,6 +157,7 @@ def verifier_collisions():
             # Collision avec un autre alien blanc
             for alien in aliens_blancs[:]:
                 if alien.alien_id == item:
+                    print(f"Collision avec alien_blanc {alien.alien_id}")
                     alien.delete()
                     aliens_blancs.remove(alien)
                     missile.delete()
@@ -161,6 +167,7 @@ def verifier_collisions():
             # Collision avec un autre alien rouge
             for alien in aliens_rouges[:]:
                 if alien.alien_id == item:
+                    print(f"Collision avec alien_rouge {alien.alien_id}")
                     alien.delete()
                     aliens_rouges.remove(alien)
                     missile.delete()
