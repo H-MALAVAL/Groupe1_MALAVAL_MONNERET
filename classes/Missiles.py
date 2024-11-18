@@ -20,9 +20,13 @@ class Missile:
     def is_out_of_bounds(self):
         coords = self.canvas.coords(self.missile_id)
         if len(coords) != 4:  # Si les coordonnées ne sont pas valides
+            self.delete()
             return True
         _, y1, _, y2 = coords
-        return y2 < 0 or y1 > self.canvas.winfo_height()
+        if y2 < 0 or y1 > self.canvas.winfo_height():
+            self.delete()
+            return True
+        return False
 
     def delete(self):
         self.canvas.delete(self.missile_id)
