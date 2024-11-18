@@ -7,7 +7,7 @@ import random
 
 class Murs:
     
-    def __init__(self, canvas, x, y, size=30, color="white"):
+    def __init__(self, canvas, x, y, size=30, color="red"):
         """
         Initialise les murs avec leurs paramètres de position et de taille.
         """
