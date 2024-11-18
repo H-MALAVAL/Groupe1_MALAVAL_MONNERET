@@ -18,6 +18,8 @@ class Joueur:
             self.y + self.size // 2,
             fill="blue"
         )
+        self.invincible = False  # Indique si le joueur est temporairement invincible
+        self.clignotement_actif = False  # Pour gérer le clignotement
         
         """image = Image.open("vaisseau.gif")
 
@@ -37,6 +39,38 @@ class Joueur:
             self.y + self.size // 2
         )
 
+    def perdre_vie(self):
+        if not self.invincible:  # Réduire la vie uniquement si le joueur n'est pas invincible
+            self.vie -= 1
+            print(f"Vie restante : {self.vie}")
+            if self.vie <= 0:
+                self.mourir()
+            else:
+                self.devenir_invincible()
+
+    def mourir(self):
+        print("Game Over!")
+        self.canvas.delete(self.id)  # Supprimer le joueur du canvas
+
+    def devenir_invincible(self, duree=2000):  # Période d'invincibilité en ms
+        self.invincible = True
+        self.clignotement_actif = True
+        self.clignoter()
+        self.canvas.after(duree, self.fin_invincibilite)
+
+    def fin_invincibilite(self):
+        self.invincible = False
+        self.clignotement_actif = False
+        self.canvas.itemconfig(self.id, state="normal")  # Rendre visible
+
+    def clignoter(self):
+        if self.clignotement_actif:
+            # Alterner entre visible/invisible
+            etat_actuel = self.canvas.itemcget(self.id, "state")
+            nouvel_etat = "hidden" if etat_actuel == "normal" else "normal"
+            self.canvas.itemconfig(self.id, state=nouvel_etat)
+            # Répéter toutes les 200 ms
+            self.canvas.after(200, self.clignoter)
     
     def score(self):
         """Arguments: aucun
