@@ -54,7 +54,6 @@ def nouvelle_partie():
 
 # Fonction pour déplacer le vaisseau avec les touches
 def Clavier(event):
-    print('JE suis la')# Met à jour la position sur le canvas
     touche = event.keysym
     if touche == 'a':
         joueur.deplacer(-10)
@@ -184,7 +183,7 @@ def verifier_collisions():
             j_x1, j_y1, j_x2, j_y2 = joueur_coords
             if m_x2 > j_x1 and m_x1 < j_x2 and m_y2 > j_y1 and m_y1 < j_y2:
                 print("Collision avec Joueur")
-                #joueur.perdre_vie()
+                joueur.perdre_vie()
                 if missile in missiles_aliens:
                     missile.delete()
                     missiles_aliens.remove(missile)
