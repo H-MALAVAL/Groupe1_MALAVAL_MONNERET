@@ -26,9 +26,9 @@ def nouvelle_partie():
     global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
-=======
+
     #Clavier(event.keysym)
->>>>>>> a331d072a3d22ea782588229d8a3f741928a5104
+
     for alien in aliens_blancs + aliens_rouges:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
