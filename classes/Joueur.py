@@ -45,11 +45,4 @@ class Joueur:
          vies = 3
     
     # Déplacer le vaisseau avec les touches fléchées
-    def Clavier(event):
-        
-        global PosX
-        touche = event.keysym
-        if touche == 'Left':
-            joueur.deplacer(-10, 0)
-        elif touche == 'Right':
-            joueur.deplacer(10, 0)
+
