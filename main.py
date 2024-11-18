@@ -25,6 +25,7 @@ espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 def nouvelle_partie():
     global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
     # Réinitialiser les objets
+    Clavier(event.keysym)
     for alien in aliens_blancs + aliens_rouges:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
@@ -49,6 +50,7 @@ def nouvelle_partie():
     
     verifier_collisions()
 
+# Fonction pour déplacer le vaisseau avec les touches
 def Clavier(event):
     global PosX
     touche = event.keysym
@@ -58,7 +60,7 @@ def Clavier(event):
         joueur.deplacer(10, 0)
             
     canvas.coords(Joueur,PosX-10,PosX+10) 
-
+    
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
     x_position = 50  # Position de départ en x pour les aliens blancs
