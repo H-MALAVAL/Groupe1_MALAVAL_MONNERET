@@ -26,6 +26,9 @@ def nouvelle_partie():
     global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
+=======
+    #Clavier(event.keysym)
+>>>>>>> a331d072a3d22ea782588229d8a3f741928a5104
     for alien in aliens_blancs + aliens_rouges:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
@@ -101,7 +104,8 @@ def envoyer_nouvelle_ligne():
 # Cibles pour les aliens rouges
 def mettre_a_jour_cibles_rouges():
     for alien_rouge in aliens_rouges:
-        alien_rouge.set_new_target()
+        if alien_rouge.alien_id:
+            alien_rouge.set_new_target()
     fenetre_principale.after(5000, mettre_a_jour_cibles_rouges)  # Rappel toutes les 7 secondes
 
 # Fonction pour déplacer les aliens rouges
@@ -126,63 +130,104 @@ def verifier_collisions():
     # Collisions des missiles du joueur
     for missile in missiles_joueur[:]:
         missile_coords = canvas.coords(missile.missile_id)
-        items = canvas.find_overlapping(*missile_coords)
+        if len(missile_coords) != 4:
+            continue  # Ignorer les missiles sans coordonnées valides
+        m_x1, m_y1, m_x2, m_y2 = missile_coords
 
-        for item in items:
-            if item == missile.missile_id:
+        # Vérification des collisions avec les aliens blancs
+        for alien in aliens_blancs[:]:
+            alien_coords = canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
+                continue  # Ignorer les aliens sans coordonnées valides
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
+
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                alien.delete()
+                aliens_blancs.remove(alien)
+                if missile in missiles_joueur:
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                break
+
+        # Vérification des collisions avec les aliens rouges
+        for alien in aliens_rouges[:]:
+            alien_coords = canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
                 continue
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
 
-            # Collision avec un alien blanc
-            for alien in aliens_blancs[:]:
-                if alien.alien_id == item:
-                    alien.delete()
-                    aliens_blancs.remove(alien)
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                alien.delete()
+                aliens_rouges.remove(alien)
+                if missile in missiles_joueur:
                     missile.delete()
                     missiles_joueur.remove(missile)
-                    break
-
-            # Collision avec un alien rouge
-            for alien in aliens_rouges[:]:
-                if alien.alien_id == item:
-                    alien.delete()
-                    aliens_rouges.remove(alien)
-                    missile.delete()
-                    missiles_joueur.remove(missile)
-                    break
+                break
 
     # Collisions des missiles aliens
     for missile in missiles_aliens[:]:
         missile_coords = canvas.coords(missile.missile_id)
-        items = canvas.find_overlapping(*missile_coords)
+        if len(missile_coords) != 4:
+            continue
+        m_x1, m_y1, m_x2, m_y2 = missile_coords
 
-        for item in items:
-            if item == missile.missile_id:
+        # Collision avec le joueur
+        joueur_coords = canvas.coords(joueur.vaisseau_id)
+        if len(joueur_coords) == 4:
+            j_x1, j_y1, j_x2, j_y2 = joueur_coords
+            if m_x2 > j_x1 and m_x1 < j_x2 and m_y2 > j_y1 and m_y1 < j_y2:
+                print("Collision avec Joueur")
+                #joueur.perdre_vie()
+                if missile in missiles_aliens:
+                    missile.delete()
+                    missiles_aliens.remove(missile)
                 continue
 
+<<<<<<< HEAD
             # Collision avec le joueur
             if joueur.id == item:
                 """joueur.perdre_vie()
                 missile.delete()
                 missiles_aliens.remove(missile)"""
+=======
+        # Vérification des collisions avec les aliens blancs
+        for alien in aliens_blancs[:]:
+            alien_coords = canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
+                continue  # Ignorer les aliens sans coordonnées valides
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
+
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                alien.delete()
+                aliens_blancs.remove(alien)
+                if missile in missiles_aliens:
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+>>>>>>> a331d072a3d22ea782588229d8a3f741928a5104
                 break
 
-            # Collision avec un autre alien blanc
-            for alien in aliens_blancs[:]:
-                if alien.alien_id == item:
-                    alien.delete()
-                    aliens_blancs.remove(alien)
-                    missile.delete()
-                    missiles_aliens.remove(missile)
-                    break
+        # Vérification des collisions avec les aliens rouges
+        for alien in aliens_rouges[:]:
+            alien_coords = canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
+                continue
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
 
-            # Collision avec un autre alien rouge
-            for alien in aliens_rouges[:]:
-                if alien.alien_id == item:
-                    alien.delete()
-                    aliens_rouges.remove(alien)
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                alien.delete()
+                aliens_rouges.remove(alien)
+                if missile in missiles_aliens:
                     missile.delete()
                     missiles_aliens.remove(missile)
-                    break
+                break
 
     # Répéter la vérification périodiquement
     fenetre_principale.after(50, verifier_collisions)
