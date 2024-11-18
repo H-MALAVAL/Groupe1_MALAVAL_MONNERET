@@ -5,40 +5,38 @@ from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messag
 class Joueur:
     # Composée de l'apparence du joueur, du score du joueur et de ses points de vie
     def __init__(self, canvas, x, y, score, vie, size = 30):
-
+        self.canvas = canvas
+        self.x = x
+        self.y = y
+        self.size = size
         self.score = score
         self.vie = vie
-        self.canvas = canvas
-        self.size = size
-        self.x = x
+        self.id = canvas.create_rectangle(
+            self.x - self.size // 2,
+            self.y - self.size // 2,
+            self.x + self.size // 2,
+            self.y + self.size // 2,
+            fill="blue"
+        )
         
         """image = Image.open("vaisseau.gif")
 
         self.image_tk = ImageTk.PhotoImage(image)  # Convertir en format compatible Tkinter"""
-        # Coordonnées du trapèze centré sur (650, 600)
-        x_center, y_center = 650, 600
-        width_top = 100  # Largeur du haut du trapèze
-        width_bottom = 200  # Largeur du bas du trapèze
-        height = 100  # Hauteur du trapèze
-
-        # Calcul des points du trapèze
-        points = [
-            x_center - width_top // 2, y_center - height // 2,    # Point en haut à gauche
-            x_center + width_top // 2, y_center - height // 2,    # Point en haut à droite
-            x_center + width_bottom // 2, y_center + height // 2, # Point en bas à droite
-            x_center - width_bottom // 2, y_center + height // 2  # Point en bas à gauche
-        ]
-        self.id = canvas.create_polygon(points, fill="violet", outline="black", width=2)
                 
-    def deplacer(self,dx):
-        
+    def deplacer(self, dx):
+        # Modifier la position
         self.x += dx
-        # Met à jour la position sur le canvas
+        # Empêcher le joueur de sortir des limites
+        self.x = max(self.size // 2, min(self.canvas.winfo_width() - self.size // 2, self.x))
+        # Mettre à jour graphiquement
         self.canvas.coords(
-            self.id, 
+            self.id,
             self.x - self.size // 2,
+            self.y - self.size // 2,
             self.x + self.size // 2,
+            self.y + self.size // 2
         )
+
     
     def score(self):
         """Arguments: aucun

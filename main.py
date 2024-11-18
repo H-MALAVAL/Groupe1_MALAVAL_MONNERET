@@ -54,18 +54,17 @@ def nouvelle_partie():
 
 # Fonction pour déplacer le vaisseau avec les touches
 def Clavier(event):
-    global PosX
     print('JE suis la')# Met à jour la position sur le canvas
     touche = event.keysym
     if touche == 'a':
-        joueur.deplacer(-1)
+        joueur.deplacer(-10)
     elif touche == 'z':
-        joueur.deplacer(1)
-            
-    canvas.coords(joueur,PosX-1,PosX+1)
-    
-    # Mettre à jour la position sur le canvas
-    canvas.coords(Joueur.id, PosX - 10, 600, PosX + 10, 630)  # Ajuste les dimensions 
+        joueur.deplacer(10)
+    elif touche == 'space':
+        tirs_joueurs()
+             
+    # Met à jour la position du joueur sur le canevas
+    canvas.coords(joueur.id, joueur.x - 10, 600, joueur.x + 10, 630)
     
 # Fonction pour créer une ligne d'aliens blancs
 def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=70):
@@ -121,6 +120,13 @@ def tirs_aliens_rouges():
             missiles_aliens.append(missile)
             missile.move()
     fenetre_principale.after(500, tirs_aliens_rouges)
+
+# Gestion des tirs du joueurs
+def tirs_joueurs():
+        x, y = joueur.x, joueur.y
+        missile = Missile(canvas, x=x, y=y - joueur.size, direction="up")
+        missiles_joueur.append(missile)
+        missile.move()
 
 # Fonction pour vérifier les collisions
 def verifier_collisions():
@@ -294,3 +300,5 @@ menubar.add_cascade(label="Difficulté", menu=menu_difficulte)
 fenetre_principale.config(menu=menubar)
 # Lancement de la boucle principale de l'interface
 fenetre_principale.mainloop()
+
+
