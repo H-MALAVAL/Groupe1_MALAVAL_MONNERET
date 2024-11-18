@@ -34,7 +34,7 @@ def nouvelle_partie():
     missiles_aliens, missiles_joueur = [], []
 
     str_score.set("SCORE : 0")
-    creer_aliens_blancs_en_ligne(10)  # Créer une ligne d'aliens blancs
+    creer_aliens_blancs_en_ligne(0)  # Créer une ligne d'aliens blancs
     creer_alien_rouge(5)  # Créer des aliens rouge aléatoire
 
     mouvement_aliens_blancs()
@@ -43,7 +43,7 @@ def nouvelle_partie():
     mettre_a_jour_cibles_rouges()
 
     envoyer_nouvelle_ligne()
-    
+    verifier_aliens_rouges()
 
     # Réinitialiser le joueur
     joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
@@ -108,6 +108,11 @@ def mouvement_aliens_rouges():
     for alien_rouge in aliens_rouges:
         alien_rouge.move_towards_target()
     fenetre_principale.after(42, mouvement_aliens_rouges)  # Rappel toutes les 42 ms
+
+def verifier_aliens_rouges():
+    if len(aliens_rouges) <= 2:  
+        creer_alien_rouge(5)    
+    fenetre_principale.after(1000, verifier_aliens_rouges) 
 
 
 # Gestion des tirs des aliens rouges
