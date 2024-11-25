@@ -56,7 +56,8 @@ def nouvelle_partie():
     verifier_aliens_rouges()
 
     # Réinitialiser le joueur
-    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30, 
+    joueur = Joueur(canvas, x=650, y=600, classes/vaisseau.gif, 
+                    score=0, vie=3, size=30, 
                     update_vie_callback=mettre_a_jour_vies_interface, 
                     update_score_callback=mettre_a_jour_score_interface)
 
