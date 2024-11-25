@@ -1,5 +1,5 @@
 # MALAVAL Hugo, MONNERET Martin le 4/11/2024 
-from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
+from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox, PhotoImage
 
 # Création de la class joueur
 class Joueur:
@@ -8,52 +8,28 @@ class Joueur:
         self.canvas = canvas
         self.x = x
         self.y = y
-        
-        # Chargement de l'image du vaisseau
-        self.image = Tk.PhotoImage(file=image_path)
-        
         self.size = size
         self.score = score
         self.vie = vie
         self.update_vie_callback = update_vie_callback
         self.update_score_callback = update_score_callback
-        self.id = canvas.create_rectangle(
-            self.x - self.size // 2,
-            self.y - self.size // 2,
-            self.x + self.size // 2,
-            self.y + self.size // 2,
-            fill="blue"
-        )
+        
         self.invincible = False  # Indique si le joueur est temporairement invincible
         self.clignotement_actif = False  # Pour gérer le clignotement
+
+        # Chargement de l'image du vaisseau
+        self.image = PhotoImage(file=image_path)
+        self.id = self.canvas.create_image(self.x, self.y, image=self.image, anchor="center")
 
         # Appeler le callback pour synchroniser l'interface au démarrage
         if self.update_vie_callback:
             self.update_vie_callback(self.vie)
         if self.update_score_callback:
             self.update_score_callback(self.score)
-        
-        # Ajout de l'image au Canvas
-        self.image_id = self.canvas.create_image(self.x, self.y, image=self.image, anchor=Tk.CENTER)
-        
-        """image = Image.open("vaisseau.gif")
-
-        self.image_tk = ImageTk.PhotoImage(image)  # Convertir en format compatible Tkinter"""
                 
     def deplacer(self, dx):
-        # Modifier la position
         self.x += dx
-        # Empêcher le joueur de sortir des limites
-        self.x = max(self.size // 2, min(self.canvas.winfo_width() - self.size // 2, self.x))
-        # Mettre à jour graphiquement
-        self.canvas.coords(
-            self.id,
-            self.x - self.size // 2,
-            self.y - self.size // 2,
-            self.x + self.size // 2,
-            self.y + self.size // 2
-        )
-        self.canvas.move(self.image_id, dx)
+        self.canvas.coords(self.id, self.x, self.y)
 
     def perdre_vie(self):
         if not self.invincible:  # Réduire la vie uniquement si le joueur n'est pas invincible
