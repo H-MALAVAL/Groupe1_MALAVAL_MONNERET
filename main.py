@@ -28,7 +28,7 @@ espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
-    global aliens_blancs, aliens_rouges, alien_bonuss, missiles_aliens, missiles_joueur, murs, joueur
+    global aliens_blancs, aliens_rouges, alien_bonuss, missiles_aliens, missiles_joueur, murs, liste_murs, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
     for alien in aliens_blancs + aliens_rouges+alien_bonuss:
@@ -359,7 +359,7 @@ def attribuer_points_alien(couleur_alien):
     points_par_couleur = {
         "white": 10,
         "red": 25,
-        "violet": 150
+        "purple": 150
     }
     return points_par_couleur.get(couleur_alien, 0)  # Défaut à 0 si la couleur est inconnue
 
