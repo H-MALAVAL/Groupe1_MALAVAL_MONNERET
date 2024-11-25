@@ -19,6 +19,7 @@ liste_murs = []
 # Liste pour stocker les objets Alien
 aliens_blancs = []
 aliens_rouges = []
+alien_bonuss = []
 missiles_aliens = []
 missiles_joueur = []
 
@@ -27,14 +28,14 @@ espacement_y = 50      # Espacement vertical entre les lignes d'aliens
 
 # Fonction pour démarrer une nouvelle partie
 def nouvelle_partie():
-    global aliens_blancs, aliens_rouges, missiles_aliens, missiles_joueur, murs, joueur
+    global aliens_blancs, aliens_rouges, alien_bonuss, missiles_aliens, missiles_joueur, murs, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
-    for alien in aliens_blancs + aliens_rouges:
+    for alien in aliens_blancs + aliens_rouges+alien_bonuss:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
         missile.delete()
-    aliens_blancs, aliens_rouges = [], []
+    aliens_blancs, aliens_rouges, alien_bonuss = [], [], []
     missiles_aliens, missiles_joueur = [], []
     liste_murs = []
 
@@ -42,10 +43,13 @@ def nouvelle_partie():
     creer_murs(4)
     creer_aliens_blancs_en_ligne(0)  # Créer une ligne d'aliens blancs
     creer_alien_rouge(5)  # Créer des aliens rouge aléatoire
+    creer_alien_bonus()
     
     mouvement_aliens_blancs()
     mouvement_aliens_rouges()
+    mouvement_alien_bonus()
     tirs_aliens_rouges()
+    tirs_aliens_bonus()
     mettre_a_jour_cibles_rouges()
 
     envoyer_nouvelle_ligne()
@@ -53,8 +57,6 @@ def nouvelle_partie():
 
     # Réinitialiser le joueur
     joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
-    
-    PosX = joueur.x
     
     verifier_collisions()
 
@@ -89,6 +91,12 @@ def creer_alien_rouge(nombre):
         alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=5, color="red")
         aliens_rouges.append(alien_rouge)
         
+def creer_alien_bonus(nombre=1):
+    for _ in range(nombre):
+        x_position = random.randint(50, largeur - 50)
+        alien_bonus = Alien(canvas, x=x_position, y=ligne_initiale_y, size=90, speed=5, color="purple")
+        alien_bonuss.append(alien_bonus)
+        
 def creer_murs(nombre):
     x_position = 50
     for _ in range(nombre):
@@ -102,6 +110,11 @@ def mouvement_aliens_blancs():
     for alien in aliens_blancs:
         alien.move()  # Déplacer l'alien blanc
     fenetre_principale.after(42, mouvement_aliens_blancs)  # Rappel toutes les 42 ms
+    
+def mouvement_alien_bonus():
+    for alien in alien_bonuss:
+        alien.move()
+    fenetre_principale.after(42, mouvement_alien_bonus)  # Rappel toutes les 42 ms
 
 # Fonction pour envoyer une nouvelle ligne d'aliens toutes les 10 secondes
 def envoyer_nouvelle_ligne():
@@ -116,6 +129,12 @@ def mettre_a_jour_cibles_rouges():
         if alien_rouge.alien_id:
             alien_rouge.set_new_target()
     fenetre_principale.after(5000, mettre_a_jour_cibles_rouges)  # Rappel toutes les 7 secondes
+    
+def mettre_a_jour_cibles_bonus():
+    for alien_bonus in alien_bonuss:
+        if alien_bonus.alien_id:
+            alien_bonus.set_new_target()
+    fenetre_principale.after(5000, mettre_a_jour_cibles_bonus)  # Rappel toutes les 7 secondes
 
 # Fonction pour déplacer les aliens rouges
 def mouvement_aliens_rouges():
@@ -126,8 +145,7 @@ def mouvement_aliens_rouges():
 def verifier_aliens_rouges():
     if len(aliens_rouges) <= 2:  
         creer_alien_rouge(5)    
-    fenetre_principale.after(1000, verifier_aliens_rouges) 
-
+    fenetre_principale.after(1000, verifier_aliens_rouges)
 
 # Gestion des tirs des aliens rouges
 def tirs_aliens_rouges():
@@ -138,6 +156,16 @@ def tirs_aliens_rouges():
             missiles_aliens.append(missile)
             missile.move()
     fenetre_principale.after(500, tirs_aliens_rouges)
+    
+# Gestion des tirs de l alien bonus
+def tirs_aliens_bonus():
+    for alien_bonus in alien_bonuss:
+        if random.random() < 0.9:  # 90% de chance de tirer
+            x, y = alien_bonus.get_position()
+            missile = Missile(canvas, x=x, y=y + alien_bonus.size, direction="down")
+            missiles_aliens.append(missile)
+            missile.move()
+    fenetre_principale.after(500, tirs_aliens_bonus)
 
 # Gestion des tirs du joueurs
 def tirs_joueurs():
@@ -184,6 +212,23 @@ def verifier_collisions():
                 # Collision détectée
                 alien.delete()
                 aliens_rouges.remove(alien)
+                if missile in missiles_joueur:
+                    missile.delete()
+                    missiles_joueur.remove(missile)
+                break
+            
+        # Vérification des collisions avec les aliens rouges
+        for alien in alien_bonuss[:]:
+            alien_coords = canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
+                continue
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
+
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                alien.delete()
+                alien_bonuss.remove(alien)
                 if missile in missiles_joueur:
                     missile.delete()
                     missiles_joueur.remove(missile)
@@ -253,6 +298,23 @@ def verifier_collisions():
                 # Collision détectée
                 alien.delete()
                 aliens_rouges.remove(alien)
+                if missile in missiles_aliens:
+                    missile.delete()
+                    missiles_aliens.remove(missile)
+                break
+            
+        # Vérification des collisions avec l alien blanc
+        for alien in alien_bonuss[:]:
+            alien_coords = canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
+                continue
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
+
+            # Vérification géométrique
+            if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
+                # Collision détectée
+                alien.delete()
+                alien_bonuss.remove(alien)
                 if missile in missiles_aliens:
                     missile.delete()
                     missiles_aliens.remove(missile)

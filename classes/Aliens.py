@@ -23,7 +23,7 @@ class Alien:
         
         # Création de l'alien avec la couleur spécifiée
         self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
-
+    
     def move(self):
         x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
         if x2 >= self.canvas.winfo_width() or x1 <= 0:
