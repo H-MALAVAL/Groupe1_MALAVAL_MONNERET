@@ -56,9 +56,12 @@ def nouvelle_partie():
     verifier_aliens_rouges()
 
     # Réinitialiser le joueur
-    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30)
-    
+    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30, update_vie_callback=mettre_a_jour_vies_interface)
+
     verifier_collisions()
+
+def mettre_a_jour_vies_interface(vies_restantes):
+    str_vies.set(f"Vie restante : {vies_restantes}")
 
 # Fonction pour déplacer le vaisseau avec les touches
 def Clavier(event):
