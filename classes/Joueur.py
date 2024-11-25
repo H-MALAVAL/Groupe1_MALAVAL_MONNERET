@@ -4,10 +4,14 @@ from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messag
 # Création de la class joueur
 class Joueur:
     # Composée de l'apparence du joueur, du score du joueur et de ses points de vie
-    def __init__(self, canvas, x, y, score, vie, size = 30, update_vie_callback=None):
+    def __init__(self, canvas, x, y, score, vie, size = 30, image_path, update_vie_callback=None):
         self.canvas = canvas
         self.x = x
         self.y = y
+        
+        # Chargement de l'image du vaisseau
+        self.image = Tk.PhotoImage(file=image_path)
+        
         self.size = size
         self.score = score
         self.vie = vie
@@ -25,6 +29,9 @@ class Joueur:
         # Appeler le callback pour synchroniser l'interface au démarrage
         if self.update_vie_callback:
             self.update_vie_callback(self.vie)
+            
+        # Ajout de l'image au Canvas
+        self.image_id = self.canvas.create_image(self.x, self.y, image=self.image, anchor=Tk.CENTER)
         
         """image = Image.open("vaisseau.gif")
 
@@ -43,6 +50,7 @@ class Joueur:
             self.x + self.size // 2,
             self.y + self.size // 2
         )
+        self.canvas.move(self.image_id, dx)
 
     def perdre_vie(self):
         if not self.invincible:  # Réduire la vie uniquement si le joueur n'est pas invincible
