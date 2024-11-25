@@ -56,12 +56,18 @@ def nouvelle_partie():
     verifier_aliens_rouges()
 
     # Réinitialiser le joueur
-    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30, update_vie_callback=mettre_a_jour_vies_interface)
+    joueur = Joueur(canvas, x=650, y=600, score=0, vie=3, size=30, 
+                    update_vie_callback=mettre_a_jour_vies_interface, 
+                    update_score_callback=mettre_a_jour_score_interface)
 
     verifier_collisions()
 
 def mettre_a_jour_vies_interface(vies_restantes):
     str_vies.set(f"Vie restante : {vies_restantes}")
+
+def mettre_a_jour_score_interface(nouveau_score):
+    str_score.set(f"Score : {nouveau_score}")
+
 
 # Fonction pour déplacer le vaisseau avec les touches
 def Clavier(event):
@@ -196,6 +202,9 @@ def verifier_collisions():
             # Vérification géométrique
             if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                 # Collision détectée
+                points = attribuer_points_alien("white")
+                joueur.ajouter_score(points)
+                mettre_a_jour_score_interface(joueur.score)
                 alien.delete()
                 aliens_blancs.remove(alien)
                 if missile in missiles_joueur:
@@ -213,6 +222,9 @@ def verifier_collisions():
             # Vérification géométrique
             if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                 # Collision détectée
+                points = attribuer_points_alien("red")
+                joueur.ajouter_score(points)
+                mettre_a_jour_score_interface(joueur.score)
                 alien.delete()
                 aliens_rouges.remove(alien)
                 if missile in missiles_joueur:
@@ -339,6 +351,17 @@ def verifier_collisions():
 
     # Répéter la vérification périodiquement
     fenetre_principale.after(50, verifier_collisions)
+
+def attribuer_points_alien(couleur_alien):
+    """
+    Attribue des points en fonction de la couleur de l'alien.
+    """
+    points_par_couleur = {
+        "white": 10,
+        "red": 25,
+        "violet": 150
+    }
+    return points_par_couleur.get(couleur_alien, 0)  # Défaut à 0 si la couleur est inconnue
 
 # Fonction pour afficher les règles du jeu
 def afficher_regles():

@@ -4,7 +4,7 @@ from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messag
 # Création de la class joueur
 class Joueur:
     # Composée de l'apparence du joueur, du score du joueur et de ses points de vie
-    def __init__(self, canvas, x, y, score, vie, size = 30, image_path, update_vie_callback=None):
+    def __init__(self, canvas, x, y, score, vie, size = 30, image_path, update_vie_callback=None, update_score_callback=None):
         self.canvas = canvas
         self.x = x
         self.y = y
@@ -16,6 +16,7 @@ class Joueur:
         self.score = score
         self.vie = vie
         self.update_vie_callback = update_vie_callback
+        self.update_score_callback = update_score_callback
         self.id = canvas.create_rectangle(
             self.x - self.size // 2,
             self.y - self.size // 2,
@@ -29,7 +30,9 @@ class Joueur:
         # Appeler le callback pour synchroniser l'interface au démarrage
         if self.update_vie_callback:
             self.update_vie_callback(self.vie)
-            
+        if self.update_score_callback:
+            self.update_score_callback(self.score)
+        
         # Ajout de l'image au Canvas
         self.image_id = self.canvas.create_image(self.x, self.y, image=self.image, anchor=Tk.CENTER)
         
@@ -87,12 +90,14 @@ class Joueur:
             # Répéter toutes les 200 ms
             self.canvas.after(200, self.clignoter)
     
-    def score(self):
-        """Arguments: aucun
-        But : calculer le score du joueur quand il tire sur un alien, selon le type d'alier
-        (10 points pour alien de base, 25 pour alien qui tire et 150 pour le boss final)
-        Renvoi le score actualisé à chaque fois qu'il change et l'affiche sur la fenêtre principale"""
-        score = 0
+    def ajouter_score(self, points):
+        """
+        Ajoute des points au score et met à jour l'interface via le callback.
+        """
+        self.score += points
+        print(f"Score actuel : {self.score}")
+        if self.update_score_callback:
+            self.update_score_callback(self.score)
     
     def vie(self):
          vies = 3
