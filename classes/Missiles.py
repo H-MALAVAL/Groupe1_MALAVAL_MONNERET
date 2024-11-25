@@ -1,14 +1,18 @@
 # MALAVAL Hugo, MONNERET Martin le 15/11/2024
 
 # Création de la class missiles
-from tkinter import Canvas
+from tkinter import Canvas, PhotoImage
 class Missile:
-    def __init__(self, canvas, x, y, size=5, speed=10, delay = 0.1, direction="up"):
+    def __init__(self, canvas, x, y, image_path, size=5, speed=10, delay = 0.1, direction="up"):
         self.canvas = canvas
         self.size = size
         self.delay = delay
+        
+        # Chargement de l'image du vaisseau
+        self.image = PhotoImage(file=image_path)
+        
         self.speed = speed if direction == "up" else -speed
-        self.missile_id = canvas.create_rectangle(x, y, x + size, y + size * 2, fill="red")
+        self.missile_id = canvas.create_rectangle(x, y, image=self.image, x + size, y + size * 2, fill="red")
 
     def move(self):
         if self.canvas.coords(self.missile_id):  # Vérifiez que le missile existe encore
