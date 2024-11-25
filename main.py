@@ -91,13 +91,13 @@ def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=7
 def creer_alien_rouge(nombre):
     for _ in range(nombre):
         x_position = random.randint(50, largeur - 50)
-        alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=5, color="red")
+        alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=7, color="red")
         aliens_rouges.append(alien_rouge)
         
 def creer_alien_bonus(nombre=1):
     for _ in range(nombre):
         x_position = random.randint(50, largeur - 50)
-        alien_bonus = Alien(canvas, x=x_position, y=ligne_initiale_y, size=90, speed=5, color="purple")
+        alien_bonus = Alien(canvas, x=x_position, y=ligne_initiale_y, size=90, speed=15, color="purple")
         alien_bonuss.append(alien_bonus)
         
 def creer_murs(nombre):
@@ -364,7 +364,7 @@ def changer_difficulte():
 def definir_difficulte(niveau):
     print(f"Difficulté sélectionnée : {niveau}")  # Ou toute autre action pour paramétrer la difficulté
     messagebox.showinfo("Difficulté", f"Niveau de difficulté réglé sur : {niveau}")
-
+    
 # Création de la fenêtre principale
 fenetre_principale = Tk()
 fenetre_principale.minsize(largeur + 150, hauteur + 50)
