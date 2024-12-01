@@ -88,7 +88,7 @@ def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=7
     x_position = 50  # Position de départ en x pour les aliens blancs
     ligne_aliens = []
     for _ in range(nombre_aliens):
-        alien_blanc = Alien(canvas, x=x_position, y=y_position, size=30, speed=5, color="white")
+        alien_blanc = Alien(canvas, x=x_position, y=y_position, image_path="alien.png", color="white")
         ligne_aliens.append(alien_blanc)
         x_position += espacement_x
 
@@ -98,13 +98,13 @@ def creer_aliens_blancs_en_ligne(nombre_aliens=10, y_position=50, espacement_x=7
 def creer_alien_rouge(nombre):
     for _ in range(nombre):
         x_position = random.randint(50, largeur - 50)
-        alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, size=30, speed=7, color="red")
+        alien_rouge = Alien(canvas, x=x_position, y=ligne_initiale_y, image_path="alien.png", color="red")
         aliens_rouges.append(alien_rouge)
         
 def creer_alien_bonus(nombre=1):
     for _ in range(nombre):
         x_position = random.randint(50, largeur - 50)
-        alien_bonus = Alien(canvas, x=x_position, y=ligne_initiale_y, size=90, speed=15, color="purple")
+        alien_bonus = Alien(canvas, x=x_position, y=ligne_initiale_y, image_path="alien.png", color="purple")
         alien_bonuss.append(alien_bonus)
         
 def creer_murs(nombre):
@@ -162,7 +162,7 @@ def tirs_aliens_rouges():
     for alien_rouge in aliens_rouges:
         if random.random() < 0.5:  # 50% de chance de tirer
             x, y = alien_rouge.get_position()
-            missile = Missile(canvas, x=x, y=y + alien_rouge.size, direction="down")
+            missile = Missile(canvas, x=x, y=y + alien_rouge.size, image_path="alien.png", direction="down")
             missiles_aliens.append(missile)
             missile.move()
     fenetre_principale.after(500, tirs_aliens_rouges)

@@ -9,10 +9,11 @@ class Missile:
         self.delay = delay
         
         # Chargement de l'image du vaisseau
-        self.image = PhotoImage(file=image_path)
+        self.image_path = PhotoImage(file=image_path)
+        self.image = self.canvas.create_image(x, y, image=self.image_path)
         
         self.speed = speed if direction == "up" else -speed
-        self.missile_id = canvas.create_rectangle(x, y, image=self.image, x + size, y + size * 2, fill="red")
+        self.missile_id = canvas.create_rectangle(x, y, x + size, y + size * 2, fill="red")
 
     def move(self):
         if self.canvas.coords(self.missile_id):  # Vérifiez que le missile existe encore

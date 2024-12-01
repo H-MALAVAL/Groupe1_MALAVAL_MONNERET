@@ -2,20 +2,22 @@
 
 # Création de la class alien
 
-from tkinter import Canvas
+from tkinter import Canvas, PhotoImage
 import random
 
 class Alien:
-    def __init__(self, canvas, x, y, size=30, speed=5, descent_step=50, color="white"):
+    def __init__(self, canvas, x, y, image_path, size=30, speed=5, descent_step=50, color="white"):
         """
         Initialise l'alien avec ses paramètres de position, de taille et de vitesse.
         """
         self.canvas = canvas
         self.size = size
         self.speed = speed
-        self.direction = 1  # 1 pour aller à droite, -1 pour aller à gauche
         self.descent_step = descent_step if color == "white" else 0  # Les rouges ne descendent pas
         self.color = color
+        
+        self.image_path = PhotoImage(file=image_path)
+        self.image = self.canvas.create_image(x, y, image=self.image_path)
 
         # Position cible pour les aliens rouges
         self.target_x = x
