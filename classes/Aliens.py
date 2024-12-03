@@ -22,7 +22,7 @@ class Alien:
         # Position cible pour les aliens rouges
         self.target_x = x
         self.target_y = y
-        
+
         # Création de l'alien avec la couleur spécifiée
         self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
     
