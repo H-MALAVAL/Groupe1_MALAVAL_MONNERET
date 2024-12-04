@@ -22,3 +22,25 @@ class Murs:
         
         # Création des murs avec la couleur spécifiée
         self.murs_id = canvas.create_rectangle(x, y, x + 100, y + 50, fill=self.color)
+
+    def deplacer(self):
+        """
+        Déplace les murs horizontalement entre deux limites (rebond).
+        """
+        # Déplacement en fonction de la direction
+        dx = 5 * self.direction  # Vitesse du déplacement
+        self.canvas.move(self.murs_id, dx, 0)
+
+        # Mise à jour de la position actuelle
+        x1, y1, x2, y2 = self.canvas.coords(self.murs_id)
+        
+        # Détection des limites (rebond)
+        if x2 >= self.canvas.winfo_width() or x1 <= 0:
+            self.direction *= -1  # Inverser la direction
+
+    def animer(self):
+        """
+        Anime les murs en appelant la méthode de déplacement périodiquement.
+        """
+        self.deplacer()  # Déplace les murs
+        self.canvas.after(50, self.animer)  # Rappel toutes les 50 ms

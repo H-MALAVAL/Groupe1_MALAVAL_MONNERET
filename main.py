@@ -31,7 +31,7 @@ def nouvelle_partie():
     global aliens_blancs, aliens_rouges, alien_bonus, missiles_aliens, missiles_joueur, murs, liste_murs, joueur
     # Réinitialiser les objets
     canvas.bind_all('<KeyPress>', Clavier)
-    for alien in aliens_blancs + aliens_rouges+alien_bonus:
+    for alien in aliens_blancs + aliens_rouges + alien_bonus:
         alien.delete()
     for missile in missiles_aliens + missiles_joueur:
         missile.delete()
@@ -140,8 +140,8 @@ def creer_alien_rouge(nombre):
 def creer_alien_bonus(nombre=1):
     for _ in range(nombre):
         x_position = random.randint(50, largeur - 50)
-        alien_bonus = Alien(canvas, x=x_position, y=ligne_initiale_y, size=90, speed=15, color="purple")
-        alien_bonus.append(alien_bonus)
+        alien_bonus1 = Alien(canvas, x=x_position, y=ligne_initiale_y, size=90, speed=15, color="purple")
+        alien_bonus.append(alien_bonus1)
         
 def creer_murs(nombre):
     x_position = 50
@@ -205,10 +205,10 @@ def tirs_aliens_rouges():
     
 # Gestion des tirs de l alien bonus
 def tirs_aliens_bonus():
-    for alien_bonus in alien_bonus:
+    for bonus in alien_bonus:
         if random.random() < 0.9:  # 90% de chance de tirer
-            x, y = alien_bonus.get_position()
-            missile = Missile(canvas, x=x, y=y + alien_bonus.size, direction="down", color="purple")
+            x, y = bonus.get_position()
+            missile = Missile(canvas, x=x, y=y + bonus.size, direction="down", color="purple")
             missiles_aliens.append(missile)
             missile.move()
     fenetre_principale.after(500, tirs_aliens_bonus)
@@ -277,14 +277,17 @@ def verifier_collisions():
             a_x1, a_y1, a_x2, a_y2 = alien_coords
 
             # Vérification géométrique
+            i = 0
             if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                 # Collision détectée
-                alien.delete()
-                alien_bonus.remove(alien)
-                if missile in missiles_joueur:
-                    missile.delete()
-                    missiles_joueur.remove(missile)
-                break
+                i += 1
+                if i == 10: 
+                    alien.delete()
+                    alien_bonus.remove(alien)
+                    if missile in missiles_joueur:
+                        missile.delete()
+                        missiles_joueur.remove(missile)
+                    break
             
         for murs in liste_murs[:]:
             murs_coords = canvas.coords(murs.murs_id)

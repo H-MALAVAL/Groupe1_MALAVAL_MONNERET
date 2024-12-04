@@ -12,10 +12,10 @@ class Alien:
         """
         self.canvas = canvas
         self.size = size
+        self.color = color
         self.speed = speed
         self.direction = 1  # 1 pour aller à droite, -1 pour aller à gauche
         self.descent_step = descent_step if color == "white" else 0  # Les rouges ne descendent pas
-        self.color = color
 
         # Position cible pour les aliens rouges
         self.target_x = x
