@@ -281,6 +281,7 @@ def verifier_collisions():
             if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                 # Collision détectée
                 i += 1
+                print (i)
                 if i == 10: 
                     alien.delete()
                     alien_bonus.remove(alien)
