@@ -4,7 +4,7 @@ from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messag
 # Création de la class joueur
 class Joueur:
     # Composée de l'apparence du joueur, du score du joueur et de ses points de vie
-    def __init__(self, canvas, x, y, image_path, score, vie, size = 30, update_vie_callback=None, update_score_callback=None):
+    def __init__(self, canvas, x, y, size, score, vie, update_vie_callback, update_score_callback):
         self.canvas = canvas
         self.x = x
         self.y = y
@@ -13,13 +13,14 @@ class Joueur:
         self.vie = vie
         self.update_vie_callback = update_vie_callback
         self.update_score_callback = update_score_callback
+        self.id = canvas.create_rectangle(
+            self.x - self.size // 2, self.y - self.size // 2,
+            self.x + self.size // 2, self.y + self.size // 2,
+            fill="blue"
+        )
         
         self.invincible = False  # Indique si le joueur est temporairement invincible
         self.clignotement_actif = False  # Pour gérer le clignotement
-
-        # Chargement de l'image du vaisseau
-        self.image = PhotoImage(file=image_path)
-        self.id = self.canvas.create_image(self.x, self.y, image=self.image, anchor="center")
 
         # Appeler le callback pour synchroniser l'interface au démarrage
         if self.update_vie_callback:
@@ -28,8 +29,19 @@ class Joueur:
             self.update_score_callback(self.score)
                 
     def deplacer(self, dx):
+        largeur = 1200
         self.x += dx
-        self.canvas.coords(self.id, self.x, self.y)
+        if self.x - self.size // 2 < 0:  # Limite gauche
+            self.x = self.size // 2
+        if self.x + self.size // 2 > largeur:  # Limite droite
+            self.x = largeur - self.size // 2
+
+        # Met à jour la position graphique
+        self.canvas.coords(
+            self.id,
+            self.x - self.size // 2, self.y - self.size // 2,
+            self.x + self.size // 2, self.y + self.size // 2
+        )
 
     def perdre_vie(self):
         if not self.invincible:  # Réduire la vie uniquement si le joueur n'est pas invincible

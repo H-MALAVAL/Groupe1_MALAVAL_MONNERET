@@ -3,12 +3,13 @@
 # Création de la class missiles
 from tkinter import Canvas
 class Missile:
-    def __init__(self, canvas, x, y, size=5, speed=10, delay = 0.1, direction="up"):
+    def __init__(self, canvas, x, y, size=5, speed=10, delay = 0.1, direction="up", color="white"):
         self.canvas = canvas
         self.size = size
+        self.color = color
         self.delay = delay
         self.speed = speed if direction == "up" else -speed
-        self.missile_id = canvas.create_rectangle(x, y, x + size, y + size * 2, fill="red")
+        self.missile_id = canvas.create_rectangle(x, y, x + size, y + size * 2, fill=self.color)
 
     def move(self):
         if self.canvas.coords(self.missile_id):  # Vérifiez que le missile existe encore
