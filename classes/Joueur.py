@@ -42,7 +42,33 @@ class Joueur:
             self.x - self.size // 2, self.y - self.size // 2,
             self.x + self.size // 2, self.y + self.size // 2
         )
+        self.ajuster_position()
+    
+    def ajuster_position(self):
+        """
+        Ajuste la position du joueur pour qu'il reste dans les nouvelles limites du Canvas.
+        """
+        largeur_canvas = self.canvas.winfo_width()
+        hauteur_canvas = self.canvas.winfo_height()
 
+        # Vérifie et ajuste les coordonnées
+        if self.x - self.size // 2 < 0:
+            self.x = self.size // 2
+        elif self.x + self.size // 2 > largeur_canvas:
+            self.x = largeur_canvas - self.size // 2
+
+        if self.y - self.size // 2 < 0:
+            self.y = self.size // 2
+        elif self.y + self.size // 2 > hauteur_canvas:
+            self.y = hauteur_canvas - self.size // 2
+
+        # Applique les nouvelles coordonnées
+        self.canvas.coords(
+            self.id,
+            self.x - self.size // 2, self.y - self.size // 2,
+            self.x + self.size // 2, self.y + self.size // 2
+        )
+        
     def perdre_vie(self):
         if not self.invincible:  # Réduire la vie uniquement si le joueur n'est pas invincible
             self.vie -= 1

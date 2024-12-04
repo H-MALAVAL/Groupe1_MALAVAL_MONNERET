@@ -84,8 +84,18 @@ def game_over():
     fenetre_principale.after_cancel(tirs_aliens_bonus)
     fenetre_principale.after_cancel(verifier_collisions)
 
+canvas_reduit = False
+dernier_score_reduit = 0
 def mettre_a_jour_score_interface(nouveau_score):
+    global canvas_reduit, dernier_score_reduit
     str_score.set(f"Score : {nouveau_score}")
+    if nouveau_score % 100 == 0 and not canvas_reduit and (nouveau_score - dernier_score_reduit >= 100):  # Vérifie si la réduction n'a pas déjà eu lieu
+        reduire_canvas(canvas, largeur_reduction=100, hauteur_reduction=50)
+        canvas_reduit = True  # Marque le Canvas comme réduit
+        dernier_score_reduit = nouveau_score
+        joueur.ajuster_position()
+    if nouveau_score % 100 != 0:
+        canvas_reduit = False
     if nouveau_score >= 1000:
         gagne()
 
@@ -340,6 +350,26 @@ def verifier_collisions():
 
     # Répéter la vérification périodiquement
     fenetre_principale.after(50, verifier_collisions)
+
+def reduire_canvas(canvas, largeur_reduction, hauteur_reduction):
+    largeur_actuelle = canvas.winfo_width()
+    hauteur_actuelle = canvas.winfo_height()
+
+    nouvelle_largeur = max(largeur_actuelle - largeur_reduction, 400)  # Largeur minimale
+    nouvelle_hauteur = max(hauteur_actuelle - hauteur_reduction, 300)  # Hauteur minimale
+
+    canvas.config(width=nouvelle_largeur, height=nouvelle_hauteur)
+
+    # Ajuster les objets pour qu'ils restent dans les limites
+    for obj_id in canvas.find_all():
+        x1, y1, x2, y2 = canvas.coords(obj_id)
+        if x2 > nouvelle_largeur:
+            canvas.move(obj_id, nouvelle_largeur - x2, 0)
+        if y2 > nouvelle_hauteur:
+            canvas.move(obj_id, 0, nouvelle_hauteur - y2)
+    
+    joueur.ajuster_position()
+
 
 def attribuer_points_alien(couleur_alien):
     """
