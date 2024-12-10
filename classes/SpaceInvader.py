@@ -371,8 +371,10 @@ class SpaceInvader:
         """Met à jour l'interface du score."""
         self.str_score.set(f"SCORE : {nouveau_score}")
         
+        print(f"Condition: {nouveau_score > 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100)}")
         # Réduction du canevas si le score atteint un palier (100 points)
-        if nouveau_score >= 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100):
+        if nouveau_score > 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100):
+            print("Réduction du canevas")
             self.reduire_canvas(self.canvas, largeur_reduction=100, hauteur_reduction=50)
             self.canvas_reduit = True
             self.dernier_score_reduit = nouveau_score

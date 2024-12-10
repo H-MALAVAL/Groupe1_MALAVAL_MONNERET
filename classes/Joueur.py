@@ -29,7 +29,7 @@ class Joueur:
             self.update_score_callback(self.score)
                 
     def deplacer(self, dx):
-        largeur = 1200
+        largeur = self.canvas.winfo_width()
         self.x += dx
         if self.x - self.size // 2 < 0:  # Limite gauche
             self.x = self.size // 2
