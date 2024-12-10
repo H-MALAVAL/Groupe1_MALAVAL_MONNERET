@@ -41,8 +41,122 @@ class SpaceInvader:
         self.ligne_initiale_y = 50
         self.espacement_y = 50
 
+        # Dessiner le logo Space Invaders
+        self.dessiner_logo_texte(50, 50, taille_pixel=10, couleur="lime")
+
         # Initialisation de l'interface
         self._setup_ui()
+
+    def dessiner_logo_texte(self, x, y, taille_pixel=5, couleur="white"):
+        """
+        Dessine un texte "SPACE INVADERS" sous forme de matrice pixelisée.
+
+        :param x: Position X du coin supérieur gauche du texte.
+        :param y: Position Y du coin supérieur gauche du texte.
+        :param taille_pixel: Taille d'un pixel dans la matrice.
+        :param couleur: Couleur des pixels.
+        """
+        # Matrice représentant chaque lettre (1 = pixel rempli, 0 = vide)
+        lettres = {
+            'S': [
+                [1, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 1],
+                [1, 1, 1, 1]
+            ],
+            'P': [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [1, 0, 0],
+                [1, 0, 0]
+            ],
+            'A': [
+                [0, 1, 1, 0],
+                [1, 0, 0, 1],
+                [1, 1, 1, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1]
+            ],
+            'C': [
+                [0, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 0, 0, 0],
+                [1, 0, 0, 0],
+                [0, 1, 1, 1]
+            ],
+            'E': [
+                [1, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1]
+            ],
+            ' ': [
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0]
+            ],
+            'I': [
+                [1],
+                [1],
+                [1],
+                [1],
+                [1]
+            ],
+            'N': [
+                [1, 0, 0, 1],
+                [1, 1, 0, 1],
+                [1, 0, 1, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1]
+            ],
+            'V': [
+                [1, 0, 0, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1],
+                [0, 1, 1, 0],
+                [0, 1, 1, 0]
+            ],
+            'D': [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 1, 1]
+            ],
+            'R': [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [1, 1, 0],
+                [1, 0, 1]
+            ]
+        }
+
+        # Texte à dessiner
+        texte = "SPACE INVADERS"
+        
+        # Position de départ pour chaque lettre
+        x_courant = x
+        y_courant = y
+        
+        for lettre in texte:
+            if lettre in lettres:
+                # Dessiner chaque pixel de la lettre
+                for i, ligne in enumerate(lettres[lettre]):
+                    for j, pixel in enumerate(ligne):
+                        if pixel == 1:
+                            x1 = x_courant + j * taille_pixel
+                            y1 = y_courant + i * taille_pixel
+                            x2 = x1 + taille_pixel
+                            y2 = y1 + taille_pixel
+                            self.canvas.create_rectangle(x1, y1, x2, y2, fill=couleur, outline="")
+                # Ajouter un espacement horizontal après chaque lettre
+                x_courant += (len(lettres[lettre][0]) + 1) * taille_pixel
 
     def _setup_ui(self):
         """Configure l'interface utilisateur."""
