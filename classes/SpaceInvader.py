@@ -1,6 +1,6 @@
 # MALAVAL Hugo, MONNERET Martin le 15/11/2024
 
-# Création du fichier main
+# Création du fichier SpaceInvader
 
 import random
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
@@ -55,6 +55,11 @@ class SpaceInvader:
         :param y: Position Y du coin supérieur gauche du texte.
         :param taille_pixel: Taille d'un pixel dans la matrice.
         :param couleurs: Liste ou dictionnaire de couleurs pour chaque lettre.
+        
+        Ecrit les lettres dans des matrices, choisi les couleurs pour chaque lettre,
+        défini la taille du logo, centre le logo
+        
+        Renvoie le logo SPACE INVADERS centré sur la page d'accueil
         """
         # Matrice représentant chaque lettre (1 = pixel rempli, 0 = vide)
         lettres = {
@@ -184,7 +189,8 @@ class SpaceInvader:
 
 
     def _setup_ui(self):
-        """Configure l'interface utilisateur."""
+        """Configure la page d'accueil:
+        Le score, nombre de vies, boutons du haut, règles du jeu"""
         # Score
         self.str_score.set("SCORE : 0")
         score_label = Label(self.fenetre_principale, textvariable=self.str_score, fg="darkblue", font=("Arial", 14))
@@ -216,7 +222,9 @@ class SpaceInvader:
         self.fenetre_principale.config(menu=menubar)
 
     def nouvelle_partie(self):
-        """Démarre une nouvelle partie."""
+        """Démarre une nouvelle partie.
+        Réinitialise le score, nb de vies à 3
+        Créé le joueur, les murs, les aliens... pour que la partie puisse commencer"""
         self.canvas.bind_all('<KeyPress>', self.Clavier)
         self.canvas.delete("all")
         self.aliens_blancs = []
@@ -253,7 +261,8 @@ class SpaceInvader:
 
 
     def Clavier(self, event):
-        """Gère les interactions clavier pour déplacer le joueur ou tirer."""
+        """Gère les interactions clavier pour déplacer le joueur ou tirer.
+        Met à jour automatiquement la position du joueur"""
         touche = event.keysym
         if touche == 'a':  # Déplacer à gauche
             self.joueur.deplacer(-10)
@@ -268,7 +277,8 @@ class SpaceInvader:
 
 
     def creer_murs(self, nombre):
-        """Crée des murs protecteurs."""
+        """Crée des murs protecteurs.
+        Prends en entrée le nombre de murs"""
         x_position = 50
         for _ in range(nombre):
             y_position = 500
@@ -277,7 +287,8 @@ class SpaceInvader:
             x_position += 330
 
     def creer_aliens_blancs_en_ligne(self, nombre, y_position=500, espacement_x=70):
-        """Crée une ligne d'aliens blancs."""
+        """Crée une ligne d'aliens blancs.
+        Prends en entrée le nombre d'aliens, leur position de départ et l'espacement entre eux"""
         x_position = 50
         for _ in range(nombre):
             alien = Alien(self.canvas, x=x_position, y=y_position, size=30, speed=5, color="white")
@@ -286,7 +297,8 @@ class SpaceInvader:
 
     
     def creer_alien_rouge(self, nombre):
-        """Crée des aliens rouges à des positions aléatoires."""
+        """Crée des aliens rouges à des positions aléatoires.
+        Prends en entrée le nombre d'aliens"""
         for _ in range(nombre):
             x_position = random.randint(50, self.largeur - 50)
             alien = Alien(self.canvas, x=x_position, y=self.ligne_initiale_y, size=30, speed=7, color="red")
@@ -524,7 +536,8 @@ class SpaceInvader:
 
 
     def attribuer_points_alien(self, couleur_alien):
-        """Attribue des points en fonction de la couleur de l'alien touché."""
+        """Attribue des points en fonction de la couleur de l'alien touché.
+        Prends en entrée la couleur de l'alien."""
         points_par_couleur = {
             "white": 10,
             "red": 25,
@@ -532,13 +545,15 @@ class SpaceInvader:
         return points_par_couleur.get(couleur_alien, 0)
     
     def mettre_a_jour_vies_interface(self, vies_restantes):
-        """Met à jour l'interface des vies restantes."""
+        """Met à jour l'interface des vies restantes.
+        Prends en entrée le nombre de vies restantes"""
         self.str_vies.set(f"Vie restante : {vies_restantes}")
         if vies_restantes <= 0:
             self.game_over()
 
     def mettre_a_jour_score_interface(self, nouveau_score):
-        """Met à jour l'interface du score."""
+        """Met à jour l'interface du score.
+        Prends en entrée le nouveau score"""
         self.str_score.set(f"SCORE : {nouveau_score}")
 
         
@@ -558,7 +573,8 @@ class SpaceInvader:
             self.gagne()
     
     def reduire_canvas(self, canvas, largeur_reduction, hauteur_reduction):
-        """Réduit la taille du canevas en fonction du score."""
+        """Réduit la taille du canevas en fonction du score.
+        Prends en entrée le canvas, la largeur de réduction et la hauteur de réduction"""
         largeur_actuelle = canvas.winfo_width()
         hauteur_actuelle = canvas.winfo_height()
 
