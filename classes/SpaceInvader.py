@@ -42,19 +42,19 @@ class SpaceInvader:
         self.espacement_y = 50
 
         # Dessiner le logo Space Invaders
-        self.dessiner_logo_texte(50, 50, taille_pixel=10, couleur="lime")
+        self.dessiner_logo_texte(150, 300, taille_pixel=15, couleurs=None)
 
         # Initialisation de l'interface
         self._setup_ui()
 
-    def dessiner_logo_texte(self, x, y, taille_pixel=5, couleur="white"):
+    def dessiner_logo_texte(self, x=150, y=300, taille_pixel=15, couleurs=None):
         """
-        Dessine un texte "SPACE INVADERS" sous forme de matrice pixelisée.
+        Dessine un texte "SPACE INVADERS" sous forme de matrice pixelisée, centré horizontalement si x est None, avec des couleurs variées.
 
-        :param x: Position X du coin supérieur gauche du texte.
+        :param x: Position X du coin supérieur gauche du texte. Si None, le texte est centré.
         :param y: Position Y du coin supérieur gauche du texte.
         :param taille_pixel: Taille d'un pixel dans la matrice.
-        :param couleur: Couleur des pixels.
+        :param couleurs: Liste ou dictionnaire de couleurs pour chaque lettre.
         """
         # Matrice représentant chaque lettre (1 = pixel rempli, 0 = vide)
         lettres = {
@@ -139,13 +139,37 @@ class SpaceInvader:
 
         # Texte à dessiner
         texte = "SPACE INVADERS"
-        
-        # Position de départ pour chaque lettre
-        x_courant = x
-        y_courant = y
-        
+
+        # Définir les couleurs si elles ne sont pas fournies
+        if couleurs is None:
+            # Couleurs par défaut : arc-en-ciel (red, orange, yellow, green, cyan, blue, purple)
+            couleurs = ["red", "orange", "yellow", "green", "cyan", "blue", "purple"]
+
+        # Si c'est une liste, boucle en répétant les couleurs
+        if isinstance(couleurs, list):
+            couleur_par_lettre = {lettre: couleurs[i % len(couleurs)] for i, lettre in enumerate(texte)}
+        else:
+            # Sinon, utiliser le dictionnaire directement
+            couleur_par_lettre = couleurs
+
+        # Calculer la largeur totale en pixels du texte
+        largeur_totale = 0
         for lettre in texte:
             if lettre in lettres:
+                largeur_totale += len(lettres[lettre][0]) * taille_pixel
+            largeur_totale += taille_pixel  # Ajouter un espace entre les lettres
+
+        # Si x n'est pas fourni, centrer le texte horizontalement
+        if x is None:
+            x = (self.largeur - largeur_totale) // 2
+
+        # Dessiner chaque lettre
+        x_courant = x
+        y_courant = y
+
+        for lettre in texte:
+            if lettre in lettres:
+                couleur = couleur_par_lettre.get(lettre, "white")  # Couleur par défaut : blanc
                 # Dessiner chaque pixel de la lettre
                 for i, ligne in enumerate(lettres[lettre]):
                     for j, pixel in enumerate(ligne):
@@ -157,6 +181,7 @@ class SpaceInvader:
                             self.canvas.create_rectangle(x1, y1, x2, y2, fill=couleur, outline="")
                 # Ajouter un espacement horizontal après chaque lettre
                 x_courant += (len(lettres[lettre][0]) + 1) * taille_pixel
+
 
     def _setup_ui(self):
         """Configure l'interface utilisateur."""
