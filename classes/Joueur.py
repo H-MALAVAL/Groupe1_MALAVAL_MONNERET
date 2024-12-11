@@ -29,6 +29,8 @@ class Joueur:
             self.update_score_callback(self.score)
                 
     def deplacer(self, dx):
+        """Permet au missile de se déplacer.
+        Prend dx en paramètre d'entrée"""
         largeur = 1200
         self.x += dx
         if self.x - self.size // 2 < 0:  # Limite gauche
@@ -70,6 +72,7 @@ class Joueur:
         )
         
     def perdre_vie(self):
+        """Réinitialise le taux de vie quand un joueur en perds une"""
         if not self.invincible:  # Réduire la vie uniquement si le joueur n'est pas invincible
             self.vie -= 1
             if self.update_vie_callback:
@@ -81,21 +84,25 @@ class Joueur:
                 self.devenir_invincible()
 
     def mourir(self):
+        """Quand la partie est finie, l'annonce"""
         print("Game Over!")
         self.canvas.delete(self.id)  # Supprimer le joueur du canvas
 
     def devenir_invincible(self, duree=2000):  # Période d'invincibilité en ms
+        """Permet d'être invisible pendant une durée prise en entrée de 2000ms"""
         self.invincible = True
         self.clignotement_actif = True
         self.clignoter()
         self.canvas.after(duree, self.fin_invincibilite)
 
     def fin_invincibilite(self):
+        """met fin à l'invincibilité"""
         self.invincible = False
         self.clignotement_actif = False
         self.canvas.itemconfig(self.id, state="normal")  # Rendre visible
 
     def clignoter(self):
+        """Permet au joueur de clignoter quand il se fait toucher"""
         if self.clignotement_actif:
             # Alterner entre visible/invisible
             etat_actuel = self.canvas.itemcget(self.id, "state")
@@ -107,6 +114,7 @@ class Joueur:
     def ajouter_score(self, points):
         """
         Ajoute des points au score et met à jour l'interface via le callback.
+        Prends les points en paramètres d'entrée
         """
         self.score += points
         print(f"Score actuel : {self.score}")

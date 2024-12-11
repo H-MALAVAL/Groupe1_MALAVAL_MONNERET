@@ -25,6 +25,8 @@ class Alien:
         self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
     
     def move(self):
+        """Permet à l'alien de se déplacer.
+        """
         x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
         if x2 >= self.canvas.winfo_width() or x1 <= 0:
             self.direction *= -1
@@ -65,9 +67,11 @@ class Alien:
         self.target_y = random.randint(50, hauteur_canevas // 2)  # Limite en haut du canevas
 
     def delete(self):
+        """Efface l'alien"""
         self.canvas.delete(self.alien_id)
 
     def get_position(self):
+        """Renvoie la position (x,y) de l'alien"""
         x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
         x_center = (x1 + x2) / 2  # Calculer la position centrale en X
         y_center = (y1 + y2) / 2  # Calculer la position centrale en Y
