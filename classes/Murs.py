@@ -7,7 +7,7 @@ import random
 
 class Murs:
     
-    def __init__(self, canvas, x, y, size=300, color="white"):
+    def __init__(self, canvas, x, y, size=300, color="white", vie=5):
         """
         Initialise les murs avec leurs paramètres de position et de taille.
         """
@@ -15,6 +15,8 @@ class Murs:
         self.size = size
         self.direction = 1  # 1 pour aller à droite, -1 pour aller à gauche
         self.color = color
+        self.vie_initiale = vie
+        self.vie = vie
         
         # Position pour les murs
         self.target_x = x
@@ -23,24 +25,27 @@ class Murs:
         # Création des murs avec la couleur spécifiée
         self.murs_id = canvas.create_rectangle(x, y, x + 100, y + 50, fill=self.color)
 
-    def deplacer(self):
+    def subir_collision(self):
         """
-        Déplace les murs horizontalement entre deux limites (rebond).
+        Réduit les points de vie du mur et change sa couleur ou le supprime si nécessaire.
         """
-        # Déplacement en fonction de la direction
-        dx = 5 * self.direction  # Vitesse du déplacement
-        self.canvas.move(self.murs_id, dx, 0)
+        self.vie -= 1
+        if self.vie > 0:
+            couleurs = ["#FFCCCC", "#FF9999", "#FF6666", "#FF3333", "#FF0000"]
+            self.canvas.itemconfig(self.murs_id, fill=couleurs[max(0, self.vie - 1)])
+        else:
+            # Supprime le mur du canvas s'il est détruit
+            self.canvas.delete(self.murs_id)
+            self.murs_id = None 
+            self.canvas.after(5000, self.reapparaitre)
 
-        # Mise à jour de la position actuelle
-        x1, y1, x2, y2 = self.canvas.coords(self.murs_id)
-        
-        # Détection des limites (rebond)
-        if x2 >= self.canvas.winfo_width() or x1 <= 0:
-            self.direction *= -1  # Inverser la direction
-
-    def animer(self):
+    def reapparaitre(self):
         """
-        Anime les murs en appelant la méthode de déplacement périodiquement.
+        Fait réapparaître le mur avec ses points de vie initiaux.
         """
-        self.deplacer()  # Déplace les murs
-        self.canvas.after(50, self.animer)  # Rappel toutes les 50 ms
+        self.vie = self.vie_initiale
+        self.murs_id = self.canvas.create_rectangle(
+            self.target_x, self.target_y,
+            self.target_x + 100, self.target_y + 50,
+            fill=self.color
+        )

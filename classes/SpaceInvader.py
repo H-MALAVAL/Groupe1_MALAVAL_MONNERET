@@ -262,7 +262,7 @@ class SpaceInvader:
                         missile.delete()
                         self.missiles_joueur.remove(missile)
                     break
-
+            
             # Vérification des collisions avec les aliens rouges
             for alien in self.aliens_rouges[:]:
                 alien_coords = self.canvas.coords(alien.alien_id)
@@ -302,8 +302,12 @@ class SpaceInvader:
                             missile.delete()
                             self.missiles_joueur.remove(missile)
                         break
-                
+
+            # Vérification des collisions avec les murs 
             for murs in self.liste_murs[:]:
+                if murs.murs_id is None:
+                    continue  # Passer les murs supprimés ou non valides
+                
                 murs_coords = self.canvas.coords(murs.murs_id)
                 if len(murs_coords) != 4:
                     continue
@@ -312,6 +316,7 @@ class SpaceInvader:
                 # Vérification géométrique
                 if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                     # Collision détectée
+                    murs.subir_collision()
                     if missile in self.missiles_joueur:
                         missile.delete()
                         self.missiles_joueur.remove(missile)
@@ -337,7 +342,11 @@ class SpaceInvader:
                         self.missiles_aliens.remove(missile)
                     continue
 
+            # Vérification des collisions avec les murs 
             for murs in self.liste_murs[:]:
+                if murs.murs_id is None:
+                    continue  # Passer les murs supprimés ou non valides
+
                 murs_coords = self.canvas.coords(murs.murs_id)
                 if len(murs_coords) != 4:
                     continue
@@ -346,10 +355,32 @@ class SpaceInvader:
                 # Vérification géométrique
                 if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                     # Collision détectée
+                    murs.subir_collision()
                     if missile in self.missiles_aliens:
                         missile.delete()
                         self.missiles_aliens.remove(missile)
                     break
+
+        # Collision entre les aliens blancs et le joueur
+        for alien in self.aliens_blancs[:]:
+            alien_coords = self.canvas.coords(alien.alien_id)
+            if len(alien_coords) != 4:
+                continue  # Ignorer les aliens sans coordonnées valides
+            a_x1, a_y1, a_x2, a_y2 = alien_coords
+
+            joueur_coords = self.canvas.coords(self.joueur.id)
+            if len(joueur_coords) == 4:  # Vérifie que le joueur est actif
+                j_x1, j_y1, j_x2, j_y2 = joueur_coords
+
+                # Vérification géométrique de la collision
+                if a_x2 > j_x1 and a_x1 < j_x2 and a_y2 > j_y1 and a_y1 < j_y2:
+                    # Collision détectée
+                    alien.delete()  # Supprimer l'alien du canvas
+                    self.aliens_blancs.remove(alien)  # Retirer l'alien de la liste
+                    self.joueur.perdre_vie()  # Réduire la vie du joueur
+                    self.mettre_a_jour_vies_interface(self.joueur.vie)  # Mettre à jour l'affichage des vies
+                    break
+
         self.fenetre_principale.after(50, self.verifier_collisions)
 
 
@@ -370,8 +401,7 @@ class SpaceInvader:
     def mettre_a_jour_score_interface(self, nouveau_score):
         """Met à jour l'interface du score."""
         self.str_score.set(f"SCORE : {nouveau_score}")
-        
-        print(f"Condition: {nouveau_score > 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100)}")
+
         # Réduction du canevas si le score atteint un palier (100 points)
         if nouveau_score > 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100):
             print("Réduction du canevas")
