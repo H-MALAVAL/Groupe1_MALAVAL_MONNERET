@@ -26,6 +26,9 @@ class Alien:
         self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
     
     def move(self):
+        """
+        Permet à l'alien de se déplacer.
+        """
         if self.alien_id:  # Vérifier que l'alien existe
             x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
             if x2 >= self.canvas.winfo_width() or x1 <= 0:
@@ -68,11 +71,17 @@ class Alien:
 
     
     def delete(self):
+        """
+        Efface l'alien
+        """
         if self.alien_id:
             self.canvas.delete(self.alien_id)
             self.alien_id = None
 
     def get_position(self):
+        """
+        Renvoie la position (x,y) de l'alien
+        """
         if self.alien_id:
             x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
             x_center = (x1 + x2) / 2

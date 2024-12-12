@@ -1,6 +1,6 @@
 # MALAVAL Hugo, MONNERET Martin le 15/11/2024
 
-# Création du fichier main
+# Création du fichier SpaceInvader
 
 import random
 from tkinter import Tk, Label, Button, Canvas, Menu, StringVar, Toplevel, messagebox
@@ -41,11 +41,156 @@ class SpaceInvader:
         self.ligne_initiale_y = 50
         self.espacement_y = 50
 
+        # Dessiner le logo Space Invaders
+        self.dessiner_logo_texte(150, 300, taille_pixel=15, couleurs=None)
+
         # Initialisation de l'interface
         self._setup_ui()
 
+    def dessiner_logo_texte(self, x=150, y=300, taille_pixel=15, couleurs=None):
+        """
+        Dessine un texte "SPACE INVADERS" sous forme de matrice pixelisée, centré horizontalement si x est None, avec des couleurs variées.
+
+        :param x: Position X du coin supérieur gauche du texte. Si None, le texte est centré.
+        :param y: Position Y du coin supérieur gauche du texte.
+        :param taille_pixel: Taille d'un pixel dans la matrice.
+        :param couleurs: Liste ou dictionnaire de couleurs pour chaque lettre.
+        
+        Ecrit les lettres dans des matrices, choisi les couleurs pour chaque lettre,
+        défini la taille du logo, centre le logo
+        
+        Renvoie le logo SPACE INVADERS centré sur la page d'accueil
+        """
+        # Matrice représentant chaque lettre (1 = pixel rempli, 0 = vide)
+        lettres = {
+            'S': [
+                [1, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 1],
+                [1, 1, 1, 1]
+            ],
+            'P': [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [1, 0, 0],
+                [1, 0, 0]
+            ],
+            'A': [
+                [0, 1, 1, 0],
+                [1, 0, 0, 1],
+                [1, 1, 1, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1]
+            ],
+            'C': [
+                [0, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 0, 0, 0],
+                [1, 0, 0, 0],
+                [0, 1, 1, 1]
+            ],
+            'E': [
+                [1, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1]
+            ],
+            ' ': [
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0]
+            ],
+            'I': [
+                [1],
+                [1],
+                [1],
+                [1],
+                [1]
+            ],
+            'N': [
+                [1, 0, 0, 1],
+                [1, 1, 0, 1],
+                [1, 0, 1, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1]
+            ],
+            'V': [
+                [1, 0, 0, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1],
+                [0, 1, 1, 0],
+                [0, 1, 1, 0]
+            ],
+            'D': [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 1, 1]
+            ],
+            'R': [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [1, 1, 0],
+                [1, 0, 1]
+            ]
+        }
+
+        # Texte à dessiner
+        texte = "SPACE INVADERS"
+
+        # Définir les couleurs si elles ne sont pas fournies
+        if couleurs is None:
+            # Couleurs par défaut : arc-en-ciel (red, orange, yellow, green, cyan, blue, purple)
+            couleurs = ["red", "orange", "yellow", "green", "cyan", "blue", "purple"]
+
+        # Si c'est une liste, boucle en répétant les couleurs
+        if isinstance(couleurs, list):
+            couleur_par_lettre = {lettre: couleurs[i % len(couleurs)] for i, lettre in enumerate(texte)}
+        else:
+            # Sinon, utiliser le dictionnaire directement
+            couleur_par_lettre = couleurs
+
+        # Calculer la largeur totale en pixels du texte
+        largeur_totale = 0
+        for lettre in texte:
+            if lettre in lettres:
+                largeur_totale += len(lettres[lettre][0]) * taille_pixel
+            largeur_totale += taille_pixel  # Ajouter un espace entre les lettres
+
+        # Si x n'est pas fourni, centrer le texte horizontalement
+        if x is None:
+            x = (self.largeur - largeur_totale) // 2
+
+        # Dessiner chaque lettre
+        x_courant = x
+        y_courant = y
+
+        for lettre in texte:
+            if lettre in lettres:
+                couleur = couleur_par_lettre.get(lettre, "white")  # Couleur par défaut : blanc
+                # Dessiner chaque pixel de la lettre
+                for i, ligne in enumerate(lettres[lettre]):
+                    for j, pixel in enumerate(ligne):
+                        if pixel == 1:
+                            x1 = x_courant + j * taille_pixel
+                            y1 = y_courant + i * taille_pixel
+                            x2 = x1 + taille_pixel
+                            y2 = y1 + taille_pixel
+                            self.canvas.create_rectangle(x1, y1, x2, y2, fill=couleur, outline="")
+                # Ajouter un espacement horizontal après chaque lettre
+                x_courant += (len(lettres[lettre][0]) + 1) * taille_pixel
+
+
     def _setup_ui(self):
-        """Configure l'interface utilisateur."""
+        """Configure la page d'accueil:
+        Le score, nombre de vies, boutons du haut, règles du jeu"""
         # Score
         self.str_score.set("SCORE : 0")
         score_label = Label(self.fenetre_principale, textvariable=self.str_score, fg="darkblue", font=("Arial", 14))
@@ -77,7 +222,9 @@ class SpaceInvader:
         self.fenetre_principale.config(menu=menubar)
 
     def nouvelle_partie(self):
-        """Démarre une nouvelle partie."""
+        """Démarre une nouvelle partie.
+        Réinitialise le score, nb de vies à 3
+        Créé le joueur, les murs, les aliens... pour que la partie puisse commencer"""
         self.canvas.bind_all('<KeyPress>', self.Clavier)
         self.canvas.delete("all")
         self.aliens_blancs = []
@@ -114,7 +261,8 @@ class SpaceInvader:
 
 
     def Clavier(self, event):
-        """Gère les interactions clavier pour déplacer le joueur ou tirer."""
+        """Gère les interactions clavier pour déplacer le joueur ou tirer.
+        Met à jour automatiquement la position du joueur"""
         touche = event.keysym
         if touche == 'a':  # Déplacer à gauche
             self.joueur.deplacer(-10)
@@ -129,7 +277,8 @@ class SpaceInvader:
 
 
     def creer_murs(self, nombre):
-        """Crée des murs protecteurs."""
+        """Crée des murs protecteurs.
+        Prends en entrée le nombre de murs"""
         x_position = 50
         for _ in range(nombre):
             y_position = 500
@@ -138,7 +287,8 @@ class SpaceInvader:
             x_position += 330
 
     def creer_aliens_blancs_en_ligne(self, nombre, y_position=500, espacement_x=70):
-        """Crée une ligne d'aliens blancs."""
+        """Crée une ligne d'aliens blancs.
+        Prends en entrée le nombre d'aliens, leur position de départ et l'espacement entre eux"""
         x_position = 50
         for _ in range(nombre):
             alien = Alien(self.canvas, x=x_position, y=y_position, size=30, speed=5, color="white")
@@ -147,7 +297,8 @@ class SpaceInvader:
 
     
     def creer_alien_rouge(self, nombre):
-        """Crée des aliens rouges à des positions aléatoires."""
+        """Crée des aliens rouges à des positions aléatoires.
+        Prends en entrée le nombre d'aliens"""
         for _ in range(nombre):
             x_position = random.randint(50, self.largeur - 50)
             alien = Alien(self.canvas, x=x_position, y=self.ligne_initiale_y, size=30, speed=7, color="red")
@@ -393,7 +544,8 @@ class SpaceInvader:
 
 
     def attribuer_points_alien(self, couleur_alien):
-        """Attribue des points en fonction de la couleur de l'alien touché."""
+        """Attribue des points en fonction de la couleur de l'alien touché.
+        Prends en entrée la couleur de l'alien."""
         points_par_couleur = {
             "white": 10,
             "red": 25,
@@ -401,18 +553,20 @@ class SpaceInvader:
         return points_par_couleur.get(couleur_alien, 0)
     
     def mettre_a_jour_vies_interface(self, vies_restantes):
-        """Met à jour l'interface des vies restantes."""
+        """Met à jour l'interface des vies restantes.
+        Prends en entrée le nombre de vies restantes"""
         self.str_vies.set(f"Vie restante : {vies_restantes}")
         if vies_restantes <= 0:
             self.game_over()
 
     def mettre_a_jour_score_interface(self, nouveau_score):
-        """Met à jour l'interface du score."""
+        """Met à jour l'interface du score.
+        Prends en entrée le nouveau score"""
         self.str_score.set(f"SCORE : {nouveau_score}")
 
+        
         # Réduction du canevas si le score atteint un palier (100 points)
-        if nouveau_score > 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100):
-            print("Réduction du canevas")
+        if nouveau_score >= 500 and nouveau_score % 100 == 0 and not self.canvas_reduit and (nouveau_score - self.dernier_score_reduit >= 100):
             self.reduire_canvas(self.canvas, largeur_reduction=100, hauteur_reduction=50)
             self.canvas_reduit = True
             self.dernier_score_reduit = nouveau_score
@@ -427,7 +581,8 @@ class SpaceInvader:
             self.gagne()
     
     def reduire_canvas(self, canvas, largeur_reduction, hauteur_reduction):
-        """Réduit la taille du canevas en fonction du score."""
+        """Réduit la taille du canevas en fonction du score.
+        Prends en entrée le canvas, la largeur de réduction et la hauteur de réduction"""
         largeur_actuelle = canvas.winfo_width()
         hauteur_actuelle = canvas.winfo_height()
 
