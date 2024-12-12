@@ -16,6 +16,7 @@ class Alien:
         self.speed = speed
         self.direction = 1  # 1 pour aller à droite, -1 pour aller à gauche
         self.descent_step = descent_step if color == "white" else 0  # Les rouges ne descendent pas
+        self.collision_count = 0
 
         # Position cible pour les aliens rouges
         self.target_x = x
@@ -25,11 +26,12 @@ class Alien:
         self.alien_id = canvas.create_rectangle(x, y, x + size, y + size, fill=self.color)
     
     def move(self):
-        x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
-        if x2 >= self.canvas.winfo_width() or x1 <= 0:
-            self.direction *= -1
-            self.canvas.move(self.alien_id, 0, self.descent_step)
-        self.canvas.move(self.alien_id, self.speed * self.direction, 0)
+        if self.alien_id:  # Vérifier que l'alien existe
+            x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
+            if x2 >= self.canvas.winfo_width() or x1 <= 0:
+                self.direction *= -1
+                self.canvas.move(self.alien_id, 0, self.descent_step)
+            self.canvas.move(self.alien_id, self.speed * self.direction, 0)
 
     # Déplacement aléatoires des aliens rouges
     def move_towards_target(self):
@@ -64,11 +66,16 @@ class Alien:
         self.target_x = random.randint(50, largeur_canevas - 50)
         self.target_y = random.randint(50, hauteur_canevas // 2)  # Limite en haut du canevas
 
+    
     def delete(self):
-        self.canvas.delete(self.alien_id)
+        if self.alien_id:
+            self.canvas.delete(self.alien_id)
+            self.alien_id = None
 
     def get_position(self):
-        x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
-        x_center = (x1 + x2) / 2  # Calculer la position centrale en X
-        y_center = (y1 + y2) / 2  # Calculer la position centrale en Y
-        return x_center, y_center
+        if self.alien_id:
+            x1, y1, x2, y2 = self.canvas.coords(self.alien_id)
+            x_center = (x1 + x2) / 2
+            y_center = (y1 + y2) / 2
+            return x_center, y_center
+        return None, None

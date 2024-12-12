@@ -294,20 +294,28 @@ class SpaceInvader:
                 i = 0
                 if m_x2 > a_x1 and m_x1 < a_x2 and m_y2 > a_y1 and m_y1 < a_y2:
                     # Collision détectée
-                    i += 1
-                    if i == 10: 
+                    alien.collision_count += 1
+                    print(alien.collision_count)
+                    
+                    if missile in self.missiles_joueur:
+                        missile.delete()
+                        self.missiles_joueur.remove(missile)
+
+                    if alien.collision_count >= 50:
+                        points = self.attribuer_points_alien("purple")
+                        self.joueur.ajouter_score(points)
+                        self.mettre_a_jour_score_interface(self.joueur.score)
                         alien.delete()
                         self.alien_bonus.remove(alien)
                         if missile in self.missiles_joueur:
                             missile.delete()
                             self.missiles_joueur.remove(missile)
-                        break
-
+                    break
             # Vérification des collisions avec les murs 
             for murs in self.liste_murs[:]:
                 if murs.murs_id is None:
                     continue  # Passer les murs supprimés ou non valides
-                
+
                 murs_coords = self.canvas.coords(murs.murs_id)
                 if len(murs_coords) != 4:
                     continue
@@ -365,20 +373,20 @@ class SpaceInvader:
         for alien in self.aliens_blancs[:]:
             alien_coords = self.canvas.coords(alien.alien_id)
             if len(alien_coords) != 4:
-                continue  # Ignorer les aliens sans coordonnées valides
+                continue
             a_x1, a_y1, a_x2, a_y2 = alien_coords
 
             joueur_coords = self.canvas.coords(self.joueur.id)
-            if len(joueur_coords) == 4:  # Vérifie que le joueur est actif
+            if len(joueur_coords) == 4:
                 j_x1, j_y1, j_x2, j_y2 = joueur_coords
 
                 # Vérification géométrique de la collision
                 if a_x2 > j_x1 and a_x1 < j_x2 and a_y2 > j_y1 and a_y1 < j_y2:
                     # Collision détectée
-                    alien.delete()  # Supprimer l'alien du canvas
-                    self.aliens_blancs.remove(alien)  # Retirer l'alien de la liste
-                    self.joueur.perdre_vie()  # Réduire la vie du joueur
-                    self.mettre_a_jour_vies_interface(self.joueur.vie)  # Mettre à jour l'affichage des vies
+                    alien.delete()
+                    self.aliens_blancs.remove(alien)
+                    self.joueur.perdre_vie()
+                    self.mettre_a_jour_vies_interface(self.joueur.vie)
                     break
 
         self.fenetre_principale.after(50, self.verifier_collisions)
