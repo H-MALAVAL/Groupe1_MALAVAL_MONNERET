@@ -615,7 +615,7 @@ class SpaceInvader:
 
     def afficher_regles(self):
         """Affiche les règles du jeu."""
-        messagebox.showinfo("Règles", "Règles du jeu:\n1. Déplacez votre vaisseau avec les touches.\n2. Tirez sur les aliens.\n3. Ne vous faites pas toucher.")
+        messagebox.showinfo("Règles", "Règles du jeu:\n1. Déplacez votre vaisseau avec les touches A et Z.\n2. Tirez sur les aliens avec la touche ESPACE.\n3. Ne vous faites pas toucher.")
 
     def afficher_a_propos(self):
         """Affiche des informations sur le jeu."""
